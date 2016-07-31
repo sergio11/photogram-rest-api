@@ -1,0 +1,13 @@
+
+
+curl -s --user 'api:key-2b5494b281d62bb4829bd9856d937970' \
+    https://api.mailgun.net/v3/sandbox86bb4d6a503e4c588fbb5ef5681f9e79.mailgun.org/messages \
+    -F from='Excited User <postmaster@mg.instangular.com>' \
+    -F to=sss4esob@gmail.com \
+    -F subject='Hello' \
+    -F text='Testing some Mailgun awesomness!'
+
+
+MongoDB 2.4
+
+db.addUser({ user: "sergio11",  pwd: "sergio11", roles: [ "clusterAdmin", "readAnyDatabase" ]})

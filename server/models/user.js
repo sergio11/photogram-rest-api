@@ -2,7 +2,11 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
+import bcrypt from 'bcrypt';
 
+// promisify bcrypt
+Promise.promisifyAll(bcrypt);
+const SALT_WORK_FACTOR = 10;
 require('mongoose-type-url');
 require('mongoose-type-email');
 /**
@@ -14,6 +18,11 @@ const UserSchema = new mongoose.Schema({
     required: true
   },
   username: {
+    type: String,
+    required: true,
+    index: { unique: true }
+  },
+  password: {
     type: String,
     required: true
   },
@@ -40,6 +49,7 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
+
 /**
  * Add your
  * - pre-save hooks
@@ -47,11 +57,28 @@ const UserSchema = new mongoose.Schema({
  * - virtuals
  */
 
+UserSchema.pre('save', function (next) {
+  const user = this;
+  // only hash the password if it has been modified (or is new)
+  if (!user.isModified('password')) return next();
+  bcrypt.genSaltAsync(SALT_WORK_FACTOR)
+    .then(result => bcrypt.hashAsync(user.password, result))
+    .then(hash => {
+      // override the cleartext password with the hashed one
+      user.password = hash;
+      next();
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 /**
  * Methods
  */
-UserSchema.method({});
-
+UserSchema.method({
+  comparePassword: candidatePassword => bcrypt.compareAsync(candidatePassword, this.password)
+});
 /**
  * Statics
  */

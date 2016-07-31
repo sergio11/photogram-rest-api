@@ -10,9 +10,10 @@ describe('## User APIs', () => {
   let user = {
     fullname: 'Sergio Sánchez Sánchez',
     username: 'Sergio11',
+    password: 'sergio11Bisite',
     biography: 'Sergio es DIOS',
     email: 'sss4esob@gmail.com',
-    mobileNumber: '673445695',
+    mobileNumber: '673445695'
   };
 
   describe('# POST /api/users', () => {
@@ -28,10 +29,10 @@ describe('## User APIs', () => {
           expect(res.body.biography).to.equal(user.biography);
           expect(res.body.email).to.equal(user.email);
           expect(res.body.mobileNumber).to.equal(user.mobileNumber);
-          user = res.body;
+          user._id = res.body._id;
           done();
         }).catch(err => {
-          console.error(err.response.text);
+          console.error("ERROR : ", err.response.text);
         });
     });
   });
@@ -51,7 +52,7 @@ describe('## User APIs', () => {
           expect(res.body.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
-          console.error(err.response.text);
+          console.error("ERROR : ", err.response.text);
         });
     });
 
@@ -63,7 +64,7 @@ describe('## User APIs', () => {
           expect(res.body.message).to.equal('Not Found');
           done();
         }).catch(err => {
-          console.error(err.response.text);
+          console.error("ERROR : ", err.response.text);
         });
     });
   });
@@ -84,7 +85,7 @@ describe('## User APIs', () => {
           expect(res.body.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
-          console.error(err.response.text);
+          console.error("ERROR : ", err.response.text);
         });
     });
   });
@@ -98,7 +99,7 @@ describe('## User APIs', () => {
           expect(res.body).to.be.an('array');
           done();
         }).catch(err => {
-          console.error(err.response.text);
+          console.error("ERROR : ", err.response.text);
         });
     });
   });
@@ -117,8 +118,14 @@ describe('## User APIs', () => {
           expect(res.body.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
-          console.error(err.response.text);
+          console.error("ERROR : ", err.response.text);
         });
     });
   });
 });
+
+/*
+
+const comparison = bcrypt.compareSync(user.password, res.body.password);
+expect(comparison).to.equal(true);
+*/

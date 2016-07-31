@@ -6,6 +6,7 @@ export default {
     body: {
       fullname: Joi.string().required(),
       username: Joi.string().required(),
+      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/),
       biography: Joi.string().optional(),
       email: Joi.string().email(),
       mobileNumber: Joi.string().regex(/^[1-9]{9}$/).required()
@@ -17,6 +18,7 @@ export default {
     body: {
       fullname: Joi.string().required(),
       username: Joi.string().required(),
+      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/),
       website: Joi.string().optional(),
       biography: Joi.string().optional(),
       email: Joi.string().email(),
@@ -24,6 +26,14 @@ export default {
     },
     params: {
       userId: Joi.string().hex().required()
+    }
+  },
+
+  // POST /accounts/login
+  login: {
+    body: {
+      username: Joi.string().required(),
+      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/)
     }
   }
 };

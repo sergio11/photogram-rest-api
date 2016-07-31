@@ -13,6 +13,6 @@ router.get('/health-check', (req, res) =>
 router.use('/users', userRoutes);
 
 // mount account routes at /accounts
-//router.use('/accounts', accountRoutes);
+router.use('/accounts', accountRoutes);
 
 export default router;

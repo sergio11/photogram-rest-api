@@ -1,4 +1,8 @@
 import User from '../models/user';
+import { sign } from 'jsonwebtoken';
+import httpStatus from 'http-status';
+import APIError from '../helpers/APIError';
+import { secret } from '../../config/env';
 
 /**
  * Load user and append to req.
@@ -100,12 +104,18 @@ function remove(req, res, next) {
  * Login User
  * @returns {User}
  */
-function login(req, res) {
-  User.findOne({ username: req.body.username }).then((user) =>	{
+function login(req, res, next) {
+  User.findOne({ username: req.body.username }).then(user =>	{
+    if (!user) throw new APIError('Username or password invalid.', httpStatus.NOT_FOUND, true);
     user.comparePassword(req.body.password).then(isMatch => {
-      res.json({ isMatch });
+      if (isMatch) {
+        const token = sign(user.username, secret, { expiresIn: '7d' });
+        res.json({ token });
+      } else {
+        throw new APIError('Username or password invalid.', httpStatus.NOT_FOUND, true);
+      }
     });
-  });
+  }).catch(e => next(e));
 }
 
 export default { load, get, create, update, list, remove, login };

@@ -7,7 +7,7 @@ import app from '../../index';
 chai.config.includeStack = false;
 
 describe('## User APIs', () => {
-  let user = {
+  const user = {
     fullname: 'Sergio Sánchez Sánchez',
     username: 'Sergio11',
     password: 'sergio11Bisite',
@@ -32,7 +32,7 @@ describe('## User APIs', () => {
           user._id = res.body._id;
           done();
         }).catch(err => {
-          console.error("ERROR : ", err.response.text);
+          console.error('ERROR : ', err.response.text);
         });
     });
   });
@@ -52,7 +52,7 @@ describe('## User APIs', () => {
           expect(res.body.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
-          console.error("ERROR : ", err.response.text);
+          console.error('ERROR : ', err.response.text);
         });
     });
 
@@ -64,7 +64,7 @@ describe('## User APIs', () => {
           expect(res.body.message).to.equal('Not Found');
           done();
         }).catch(err => {
-          console.error("ERROR : ", err.response.text);
+          console.error('ERROR : ', err.response.text);
         });
     });
   });
@@ -85,7 +85,7 @@ describe('## User APIs', () => {
           expect(res.body.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
-          console.error("ERROR : ", err.response.text);
+          console.error('ERROR : ', err.response.text);
         });
     });
   });
@@ -99,7 +99,7 @@ describe('## User APIs', () => {
           expect(res.body).to.be.an('array');
           done();
         }).catch(err => {
-          console.error("ERROR : ", err.response.text);
+          console.error('ERROR : ', err.response.text);
         });
     });
   });
@@ -118,7 +118,7 @@ describe('## User APIs', () => {
           expect(res.body.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
-          console.error("ERROR : ", err.response.text);
+          console.error('ERROR : ', err.response.text);
         });
     });
   });

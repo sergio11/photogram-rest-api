@@ -2,7 +2,6 @@ import path from 'path';
 import _ from 'lodash';
 
 const env = process.env.NODE_ENV || 'development';
-//const env = 'development';
 const config = require(`./${env}`);
 
 const defaults = {

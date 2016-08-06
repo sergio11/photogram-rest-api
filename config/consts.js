@@ -1,8 +1,11 @@
+// Api not found
+export const API_NOT_FOUND = 900;
 // Express validation error
 export const VALIDATION_ERROR = 901;
 // Login endpoint codes
 export const LOGIN_SUCCESS = 1000;
 export const LOGIN_FAIL = 1005;
+export const INVALID_TOKEN = 1006;
 export const JWT_EXPIRES_IN = '7d';
 // create user endpoint
 export const CREATE_USER_SUCCESS = 2000;

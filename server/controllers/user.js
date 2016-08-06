@@ -1,5 +1,5 @@
 import User from '../models/user';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import { secret } from '../../config/env';
@@ -37,6 +37,16 @@ function login(req, res, next) {
       data: token
     });
   }).catch(e => next(e));
+}
+
+function verifyToken(req, res, next) {
+  const token = req.headers.auth;
+  verify(token, secret, tokenError => {
+      if (tokenError) {
+        next(new APIError(consts.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true));
+      }
+      next();
+  });
 }
 
 /**
@@ -176,4 +186,4 @@ function remove(req, res, next) {
     .catch((e) => next(e));
 }
 
-export default { load, get, create, update, list, remove, login };
+export default { load, get, create, update, list, remove, login, verifyToken };

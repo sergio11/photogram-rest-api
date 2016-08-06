@@ -5,8 +5,9 @@ import userCtrl from '../controllers/user';
 
 const router = express.Router();	// eslint-disable-line new-cap
 
-router.route('/login')
-  /** POST /accounts/login - login user */
-  .post(validate(paramValidation.login), userCtrl.login);
+/** POST /accounts/signin- login user */
+router.post('/signin', validate(paramValidation.signin), userCtrl.login);
+/** POST /accounts/sigup- signup user */
+router.post('/signup', validate(paramValidation.signup), userCtrl.create);
 
 export default router;

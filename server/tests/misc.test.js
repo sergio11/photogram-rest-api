@@ -15,7 +15,7 @@ describe('## Misc', () => {
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.text).to.equal('OK');
-          done();
+          done()
         });
     });
   });
@@ -26,25 +26,9 @@ describe('## Misc', () => {
         .get('/api/404')
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
-          expect(res.body.message).to.equal('Not Found');
-          done();
-        });
-    });
-  });
-
-  describe('# Error Handling', () => {
-    it('should handle express validation error - username is required', (done) => {
-      request(app)
-        .post('/api/users')
-        .send({
-          mobileNumber: '673445695'
-        })
-        .expect(httpStatus.BAD_REQUEST)
-        .then(res => {
-          expect(res.body.code).to.equal(consts.VALIDATION_ERROR);
-          expect(res.body.message)
-            .to
-            .equal('"fullname" is required and "username" is required');
+          expect(res.body.code).to.equal(consts.API_NOT_FOUND);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('API not found');
           done();
         });
     });

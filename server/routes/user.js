@@ -4,12 +4,12 @@ import paramValidation from '../../config/param-validation';
 import userCtrl from '../controllers/user';
 
 const router = express.Router();	// eslint-disable-line new-cap
+//verify JWT
+router.use(userCtrl.verifyToken);
 
 router.route('/')
   /** GET /api/users - Get list of users */
   .get(userCtrl.list)
-  /** POST /api/users - Create new user */
-  .post(validate(paramValidation.createUser), userCtrl.create);
 
 router.route('/:id')
   /** GET /api/users/:userId - Get user */

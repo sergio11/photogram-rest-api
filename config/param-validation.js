@@ -2,8 +2,15 @@ import Joi from 'joi';
 Joi.objectId = require('joi-objectid')(Joi);
 
 export default {
-  // POST /api/users
-  createUser: {
+  // POST /accounts/signin
+  signin: {
+    body: {
+      username: Joi.string().required(),
+      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/)
+    }
+  },
+  // POST /accounts/signup
+  signup: {
     body: {
       fullname: Joi.string().required(),
       username: Joi.string().required(),
@@ -38,13 +45,6 @@ export default {
   deleteUser: {
     params: {
       userId: Joi.objectId()
-    }
-  },
-  // POST /accounts/login
-  login: {
-    body: {
-      username: Joi.string().required(),
-      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/)
     }
   }
 };

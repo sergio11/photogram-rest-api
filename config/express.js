@@ -66,7 +66,7 @@ app.use((err, req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new APIError(1000, 'API not found', httpStatus.NOT_FOUND);
+  const err = new APIError(consts.API_NOT_FOUND, 'API not found', httpStatus.NOT_FOUND, true);
   return next(err);
 });
 

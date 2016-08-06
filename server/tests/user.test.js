@@ -3,6 +3,9 @@ import httpStatus from 'http-status';
 import chai from 'chai';
 import { expect } from 'chai';
 import app from '../../index';
+import * as consts from '../../config/consts';
+import { secret } from '../../config/env';
+import { sign } from 'jsonwebtoken';
 
 chai.config.includeStack = false;
 
@@ -23,13 +26,30 @@ describe('## User APIs', () => {
         .send(user)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.fullname).to.equal(user.fullname);
-          expect(res.body.username).to.equal(user.username);
-          expect(res.body.website).to.equal(user.website);
-          expect(res.body.biography).to.equal(user.biography);
-          expect(res.body.email).to.equal(user.email);
-          expect(res.body.mobileNumber).to.equal(user.mobileNumber);
-          user._id = res.body._id;
+          expect(res.body.code).to.equal(consts.CREATE_USER_SUCCESS);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data.fullname).to.equal(user.fullname);
+          expect(res.body.data.username).to.equal(user.username);
+          expect(res.body.data.website).to.equal(user.website);
+          expect(res.body.data.biography).to.equal(user.biography);
+          expect(res.body.data.email).to.equal(user.email);
+          expect(res.body.data.mobileNumber).to.equal(user.mobileNumber);
+          user._id = res.body.data._id;
+          done();
+        }).catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should not create a new user', (done) => {
+      request(app)
+        .post('/api/users')
+        .send(user)
+        .expect(httpStatus.BAD_REQUEST)
+        .then(res => {
+          expect(res.body.code).to.equal(consts.USER_ALREDY_EXISTS);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('User alredy exists');
           done();
         }).catch(err => {
           console.error('ERROR : ', err.response.text);
@@ -38,18 +58,20 @@ describe('## User APIs', () => {
   });
 
 
-  describe('# GET /api/users/:userId', () => {
+  describe('# GET /api/users/:id', () => {
     it('should get user details', (done) => {
       request(app)
         .get(`/api/users/${user._id}`)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.fullname).to.equal(user.fullname);
-          expect(res.body.username).to.equal(user.username);
-          expect(res.body.website).to.equal(user.website);
-          expect(res.body.biography).to.equal(user.biography);
-          expect(res.body.email).to.equal(user.email);
-          expect(res.body.mobileNumber).to.equal(user.mobileNumber);
+          expect(res.body.code).to.equal(consts.USER_FOUND);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data.fullname).to.equal(user.fullname);
+          expect(res.body.data.username).to.equal(user.username);
+          expect(res.body.data.website).to.equal(user.website);
+          expect(res.body.data.biography).to.equal(user.biography);
+          expect(res.body.data.email).to.equal(user.email);
+          expect(res.body.data.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
           console.error('ERROR : ', err.response.text);
@@ -61,7 +83,9 @@ describe('## User APIs', () => {
         .get('/api/users/56c787ccc67fc16ccc1a5e92')
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
-          expect(res.body.message).to.equal('Not Found');
+          expect(res.body.code).to.equal(consts.USER_NOT_FOUND);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('User not found');
           done();
         }).catch(err => {
           console.error('ERROR : ', err.response.text);
@@ -69,7 +93,64 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# PUT /api/users/:userId', () => {
+  describe('# POST /accounts/login', () => {
+    it('should authenticate the user', (done) => {
+      request(app)
+        .post('/api/accounts/login')
+        .send({
+          username: 'Sergio11',
+          password: 'sergio11Bisite'
+        })
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.code).to.equal(consts.LOGIN_SUCCESS);
+          expect(res.body.status).to.equal('success');
+          const token = sign(user.username, secret, { expiresIn: consts.JWT_EXPIRES_IN });
+          expect(res.body.data).to.equal(token);
+          done();
+        }).catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should not authenticate the user - Username incorrect', (done) => {
+      request(app)
+        .post('/api/accounts/login')
+        .send({
+          username: 'marcos',
+          password: 'sergio11Bisite'
+        })
+        .expect(httpStatus.NOT_FOUND)
+        .then(res => {
+          expect(res.body.code).to.equal(consts.LOGIN_FAIL);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('Username or password invalid.');
+          done();
+        }).catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should not authenticate the user - password incorrect', (done) => {
+      request(app)
+        .post('/api/accounts/login')
+        .send({
+          username: 'Sergio11',
+          password: '123456'
+        })
+        .expect(httpStatus.NOT_FOUND)
+        .then(res => {
+          expect(res.body.code).to.equal(consts.LOGIN_FAIL);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('Username or password invalid.');
+          done();
+        }).catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+  });
+
+  describe('# PUT /api/users/:id', () => {
     it('should update user details', (done) => {
       user.username = 'KK';
       request(app)
@@ -77,12 +158,14 @@ describe('## User APIs', () => {
         .send(user)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.fullname).to.equal(user.fullname);
-          expect(res.body.username).to.equal('KK');
-          expect(res.body.website).to.equal(user.website);
-          expect(res.body.biography).to.equal(user.biography);
-          expect(res.body.email).to.equal(user.email);
-          expect(res.body.mobileNumber).to.equal(user.mobileNumber);
+          expect(res.body.code).to.equal(consts.UPDATE_USER_SUCCESS);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data.fullname).to.equal(user.fullname);
+          expect(res.body.data.username).to.equal('KK');
+          expect(res.body.data.website).to.equal(user.website);
+          expect(res.body.data.biography).to.equal(user.biography);
+          expect(res.body.data.email).to.equal(user.email);
+          expect(res.body.data.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
           console.error('ERROR : ', err.response.text);
@@ -110,12 +193,14 @@ describe('## User APIs', () => {
         .delete(`/api/users/${user._id}`)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.fullname).to.equal(user.fullname);
-          expect(res.body.username).to.equal('KK');
-          expect(res.body.website).to.equal(user.website);
-          expect(res.body.biography).to.equal(user.biography);
-          expect(res.body.email).to.equal(user.email);
-          expect(res.body.mobileNumber).to.equal(user.mobileNumber);
+          expect(res.body.code).to.equal(consts.USER_DELETED);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data.fullname).to.equal(user.fullname);
+          expect(res.body.data.username).to.equal('KK');
+          expect(res.body.data.website).to.equal(user.website);
+          expect(res.body.data.biography).to.equal(user.biography);
+          expect(res.body.data.email).to.equal(user.email);
+          expect(res.body.data.mobileNumber).to.equal(user.mobileNumber);
           done();
         }).catch(err => {
           console.error('ERROR : ', err.response.text);

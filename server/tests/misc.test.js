@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import chai from 'chai';
 import { expect } from 'chai';
 import app from '../../index';
+import * as consts from '../../config/consts';
 
 chai.config.includeStack = true;
 
@@ -32,16 +33,6 @@ describe('## Misc', () => {
   });
 
   describe('# Error Handling', () => {
-    it('should handle mongoose CastError - Cast to ObjectId failed', (done) => {
-      request(app)
-        .get('/api/users/56z787zzz67fc')
-        .expect(httpStatus.INTERNAL_SERVER_ERROR)
-        .then(res => {
-          expect(res.body.message).to.equal('Internal Server Error');
-          done();
-        });
-    });
-
     it('should handle express validation error - username is required', (done) => {
       request(app)
         .post('/api/users')
@@ -50,6 +41,7 @@ describe('## Misc', () => {
         })
         .expect(httpStatus.BAD_REQUEST)
         .then(res => {
+          expect(res.body.code).to.equal(consts.VALIDATION_ERROR);
           expect(res.body.message)
             .to
             .equal('"fullname" is required and "username" is required');

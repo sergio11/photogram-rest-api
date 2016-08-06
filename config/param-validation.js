@@ -1,4 +1,5 @@
 import Joi from 'joi';
+Joi.objectId = require('joi-objectid')(Joi);
 
 export default {
   // POST /api/users
@@ -12,8 +13,13 @@ export default {
       mobileNumber: Joi.string().regex(/^[1-9]{9}$/).required()
     }
   },
-
-  // UPDATE /api/users/:userId
+  // GET /api/users/:id
+  get: {
+    params: {
+      userId: Joi.objectId()
+    }
+  },
+  // UPDATE /api/users/:id
   updateUser: {
     body: {
       fullname: Joi.string().required(),
@@ -25,10 +31,15 @@ export default {
       mobileNumber: Joi.string().regex(/^[1-9]{9}$/).required()
     },
     params: {
-      userId: Joi.string().hex().required()
+      userId: Joi.objectId()
     }
   },
-
+  // DELETE  /api/users/:id
+  deleteUser: {
+    params: {
+      userId: Joi.objectId()
+    }
+  },
   // POST /accounts/login
   login: {
     body: {

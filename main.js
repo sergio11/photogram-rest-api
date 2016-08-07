@@ -16,8 +16,7 @@ if (process.env.WEB_MEMORY) {
 pm2.connect(() => {
   pm2.start({
     script: 'server/app.js',
-    name: 'production-app',     // ----> THESE ATTRIBUTES ARE OPTIONAL:
-    exec_mode: 'cluster',            // ----> https://github.com/Unitech/PM2/blob/master/ADVANCED_README.md#schema
+    name: 'instangular-rest-api',     // ----> THESE ATTRIBUTES ARE OPTIONAL:
     instances: instancesp,
     max_memory_restart: maxMemory,   // Auto restart if process taking more than XXmo
     env: {                            // If needed declare some environment variables

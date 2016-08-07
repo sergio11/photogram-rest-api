@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "gulp serve",
-    "build": "gulp && node main.js",
+    "build": "gulp && node ./dist/main.js",
     "lint": "gulp lint",
     "test": "gulp mocha",
     "commit": "git-cz",

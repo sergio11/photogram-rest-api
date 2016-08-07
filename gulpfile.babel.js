@@ -14,7 +14,7 @@ const paths = {
   tests: './server/tests/*.js'
 };
 
-const options = {
+/* const options = {
   codeCoverage: {
     reporters: ['lcov', 'text-summary'],
     thresholds: {
@@ -22,7 +22,7 @@ const options = {
       each: { statements: 50, branches: 50, functions: 50, lines: 50 }
     }
   }
-};
+}; */
 
 // Clean up dist and coverage directory
 gulp.task('clean', () =>
@@ -77,7 +77,7 @@ gulp.task('babel', () =>
 // Start server with restart on file changes
 gulp.task('nodemon', ['lint', 'copy', 'babel'], () =>
   plugins.nodemon({
-    script: path.join('dist', 'index.js'),
+    script: path.join('dist', 'server/app.js'),
     ext: 'js',
     ignore: ['node_modules/**/*.js', 'dist/**/*.js'],
     tasks: ['lint', 'copy', 'babel']
@@ -98,14 +98,14 @@ gulp.task('pre-test', () =>
 
 // triggers mocha test with code coverage
 gulp.task('test', ['pre-test', 'set-env'], () => {
-  let reporters;
+  // let reporters;
   let	exitCode = 0;
 
-  if (plugins.util.env['code-coverage-reporter']) {
+  /* if (plugins.util.env['code-coverage-reporter']) {
     reporters = [...options.codeCoverage.reporters, plugins.util.env['code-coverage-reporter']];
   } else {
     reporters = options.codeCoverage.reporters;
-  }
+  } */
 
   return gulp.src([paths.tests], { read: false })
     .pipe(plugins.plumber())
@@ -117,19 +117,19 @@ gulp.task('test', ['pre-test', 'set-env'], () => {
         js: babelCompiler
       }
     }))
-    .once('error', (err) => {
-      plugins.util.log(err);
-      exitCode = 1;
-    })
     // Creating the reports after execution of test cases
-    .pipe(plugins.istanbul.writeReports({
+    /* .pipe(plugins.istanbul.writeReports({
       dir: './coverage',
       reporters
     }))
     // Enforce test coverage
     .pipe(plugins.istanbul.enforceThresholds({
       thresholds: options.codeCoverage.thresholds
-    }))
+    })) */
+    .once('error', (err) => {
+      plugins.util.log(err);
+      exitCode = 1;
+    })
     .once('end', () => {
       plugins.util.log('completed !!');
       process.exit(exitCode);

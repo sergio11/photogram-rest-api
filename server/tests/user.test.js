@@ -2,9 +2,9 @@ import request from 'supertest-as-promised';
 import httpStatus from 'http-status';
 import chai from 'chai';
 import { expect } from 'chai';
-import app from '../../index';
-import * as consts from '../../config/consts';
-import { secret } from '../../config/env';
+import app from '../app';
+import * as consts from '../config/consts';
+import { secret } from '../config/env';
 import { sign } from 'jsonwebtoken';
 
 chai.config.includeStack = false;
@@ -58,7 +58,7 @@ describe('## User APIs', () => {
         });
     });
 
-    it('should handle express validation error - "fullname" is required and "username" is required', (done) => {
+    it('should handle express validation error - name and fullname required', (done) => {
       request(app)
         .post('/api/accounts/signup')
         .send({
@@ -70,7 +70,7 @@ describe('## User APIs', () => {
           expect(res.body.message)
             .to
             .equal('"fullname" is required and "username" is required');
-            done();
+          done();
         });
     });
   });
@@ -189,8 +189,6 @@ describe('## User APIs', () => {
         });
     });
   });
-
-
 
   describe('# PUT /api/users/:id', () => {
     it('should update user details', (done) => {

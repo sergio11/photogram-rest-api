@@ -1,15 +1,15 @@
 import express from 'express';
 import validate from 'express-validation';
-import paramValidation from '../../config/param-validation';
+import paramValidation from '../config/param-validation';
 import userCtrl from '../controllers/user';
 
 const router = express.Router();	// eslint-disable-line new-cap
-//verify JWT
+// verify JWT
 router.use(userCtrl.verifyToken);
 
 router.route('/')
   /** GET /api/users - Get list of users */
-  .get(userCtrl.list)
+  .get(userCtrl.list);
 
 router.route('/:id')
   /** GET /api/users/:userId - Get user */

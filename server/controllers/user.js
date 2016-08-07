@@ -2,8 +2,8 @@ import User from '../models/user';
 import { sign, verify } from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
-import { secret } from '../../config/env';
-import * as consts from '../../config/consts';
+import { secret } from '../config/env';
+import * as consts from '../config/consts';
 
 /**
  * Login User
@@ -42,10 +42,10 @@ function login(req, res, next) {
 function verifyToken(req, res, next) {
   const token = req.headers.auth;
   verify(token, secret, tokenError => {
-      if (tokenError) {
-        next(new APIError(consts.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true));
-      }
-      next();
+    if (tokenError) {
+      next(new APIError(consts.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true));
+    }
+    next();
   });
 }
 

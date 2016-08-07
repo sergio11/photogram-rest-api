@@ -2,8 +2,8 @@ import request from 'supertest-as-promised';
 import httpStatus from 'http-status';
 import chai from 'chai';
 import { expect } from 'chai';
-import app from '../../index';
-import * as consts from '../../config/consts';
+import app from '../app';
+import * as consts from '../config/consts';
 
 chai.config.includeStack = true;
 
@@ -15,7 +15,7 @@ describe('## Misc', () => {
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.text).to.equal('OK');
-          done()
+          done();
         });
     });
   });

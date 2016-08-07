@@ -10,9 +10,9 @@ import expressWinston from 'express-winston';
 import expressValidation from 'express-validation';
 import helmet from 'helmet';
 import winstonInstance from './winston';
-import routes from '../server/routes';
+import routes from '../routes';
 import config from './env';
-import APIError from '../server/helpers/APIError';
+import APIError from '../helpers/APIError';
 import * as consts from './consts';
 
 const app = express();

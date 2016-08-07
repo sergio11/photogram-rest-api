@@ -6,7 +6,7 @@
   "main": "index.js",
   "private": false,
   "engines": {
-    "node": "4.4.x",
+    "node": "5.0.x",
     "npm": "3.9.x"
   },
   "scripts": {

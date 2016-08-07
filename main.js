@@ -4,11 +4,7 @@
   By using the PM2 programmatic interface, you can manage your Node.js app very easily.
  */
 import pm2 from 'pm2';
-let instancesp = -1;
 let maxMemory = '512M';
-if (process.env.WEB_CONCURRENCY) {
-  instancesp = process.env.WEB_CONCURRENCY;
-}
 if (process.env.WEB_MEMORY) {
   maxMemory = `${process.env.WEB_MEMORY}M`;
 }
@@ -17,7 +13,7 @@ pm2.connect(() => {
   pm2.start({
     script: 'server/app.js',
     name: 'instangular-rest-api',     // ----> THESE ATTRIBUTES ARE OPTIONAL:
-    instances: instancesp,
+    exec_interpreter: "./node_modules/.bin/babel-node",
     max_memory_restart: maxMemory,   // Auto restart if process taking more than XXmo
     env: {                            // If needed declare some environment variables
       NODE_ENV: 'production'

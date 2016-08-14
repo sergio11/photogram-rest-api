@@ -13,7 +13,7 @@ pm2.connect(() => {
   pm2.start({
     script: 'server/app.js',
     name: 'instangular-rest-api',     // ----> THESE ATTRIBUTES ARE OPTIONAL:
-    exec_interpreter: "./node_modules/.bin/babel-node",
+    exec_interpreter: './node_modules/.bin/babel-node',
     max_memory_restart: maxMemory,   // Auto restart if process taking more than XXmo
     env: {                            // If needed declare some environment variables
       NODE_ENV: 'production'

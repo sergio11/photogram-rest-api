@@ -13,7 +13,7 @@ import winstonInstance from './winston';
 import routes from '../routes';
 import config from './env';
 import APIError from '../helpers/APIError';
-import * as consts from './consts';
+import * as codes from '../codes/';
 
 const app = express();
 
@@ -55,7 +55,7 @@ app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
     // validation error contains errors which is an array of error each containing message[]
     const unifiedErrorMessage = err.errors.map(error => error.messages.join('. ')).join(' and ');
-    const error = new APIError(consts.VALIDATION_ERROR, unifiedErrorMessage, err.status, true);
+    const error = new APIError(codes.VALIDATION_ERROR, unifiedErrorMessage, err.status, true);
     return next(error);
   } else if (!(err instanceof APIError)) {
     const apiError = new APIError(err.code, err.message, err.status, err.isPublic);
@@ -66,7 +66,7 @@ app.use((err, req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new APIError(consts.API_NOT_FOUND, 'API not found', httpStatus.NOT_FOUND, true);
+  const err = new APIError(codes.API_NOT_FOUND, 'API not found', httpStatus.NOT_FOUND, true);
   return next(err);
 });
 

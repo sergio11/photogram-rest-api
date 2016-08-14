@@ -4,12 +4,13 @@ import chai from 'chai';
 import { expect } from 'chai';
 import app from '../app';
 import * as codes from '../codes/';
-import { secret } from '../config/env';
+import { secret } from '../../config/env';
 import { sign } from 'jsonwebtoken';
 
 chai.config.includeStack = false;
 
 describe('## User APIs', () => {
+
   const user = {
     fullname: 'Sergio Sánchez Sánchez',
     username: 'Sergio11',

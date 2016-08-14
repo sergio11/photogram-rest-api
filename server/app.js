@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
-import config from './config/env';
-import app from './config/express';
+import config from '../config/env';
+import app from '../config/express';
 
 // promisify mongoose
 Promise.promisifyAll(mongoose);

@@ -2,7 +2,7 @@ import User from '../models/user';
 import { sign, verify } from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
-import { secret } from '../config/env';
+import { secret } from '../../config/env';
 import * as codes from '../codes/';
 
 /**

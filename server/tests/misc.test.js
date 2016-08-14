@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import chai from 'chai';
 import { expect } from 'chai';
 import app from '../app';
-import * as consts from '../config/consts';
+import * as codes from '../codes/';
 
 chai.config.includeStack = true;
 
@@ -26,7 +26,7 @@ describe('## Misc', () => {
         .get('/api/404')
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
-          expect(res.body.code).to.equal(consts.API_NOT_FOUND);
+          expect(res.body.code).to.equal(codes.API_NOT_FOUND);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('API not found');
           done();

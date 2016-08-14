@@ -1,7 +1,7 @@
 import Media from '../models/media';
 import APIError from '../helpers/APIError';
 import httpStatus from 'http-status';
-import * as consts from '../config/consts';
+import codes from '../codes/media';
 
 /**
  * Load media and append to req.
@@ -9,7 +9,7 @@ import * as consts from '../config/consts';
 function load(req, res, next, id) {
   Media.get(id).then(media => {
     if (!media) {
-      throw new APIError(consts.USER_NOT_FOUND, 'Media not found', httpStatus.NOT_FOUND, true);
+      throw new APIError(codes.MEDIA_NOT_FOUND, 'Media not found', httpStatus.NOT_FOUND, true);
     }
     req.media = media;		// eslint-disable-line no-param-reassign
     return next();
@@ -24,7 +24,7 @@ function load(req, res, next, id) {
  */
 function get(req, res) {
   return res.json({
-    code: consts.USER_FOUND,
+    code: codes.MEDIA_FOUND,
     status: 'success',
     data: req.media
   });

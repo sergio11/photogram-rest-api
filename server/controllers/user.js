@@ -3,7 +3,7 @@ import { sign, verify } from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import { secret } from '../config/env';
-import * as consts from '../config/consts';
+import * as codes from '../codes/';
 
 /**
  * Login User
@@ -13,7 +13,7 @@ function login(req, res, next) {
   User.findOne({ username: req.body.username }).then(user =>	{
     if (!user) {
       throw new APIError(
-        consts.LOGIN_FAIL,
+        codes.LOGIN_FAIL,
         'Username or password invalid.',
         httpStatus.NOT_FOUND,
         true
@@ -22,17 +22,17 @@ function login(req, res, next) {
     return user.comparePassword(user.password, req.body.password).then(isMatch => {
       if (!isMatch) {
         throw new APIError(
-          consts.LOGIN_FAIL,
+          codes.LOGIN_FAIL,
           'Username or password invalid.',
           httpStatus.NOT_FOUND,
           true
         );
       }
-      return sign(user.username, secret, { expiresIn: consts.JWT_EXPIRES_IN });
+      return sign(user.username, secret, { expiresIn: codes.JWT_EXPIRES_IN });
     });
   }).then(token => {
     res.json({
-      code: consts.LOGIN_SUCCESS,
+      code: codes.LOGIN_SUCCESS,
       status: 'success',
       data: token
     });
@@ -43,7 +43,7 @@ function verifyToken(req, res, next) {
   const token = req.headers.auth;
   verify(token, secret, tokenError => {
     if (tokenError) {
-      next(new APIError(consts.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true));
+      next(new APIError(codes.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true));
     }
     next();
   });
@@ -74,7 +74,7 @@ function create(req, res, next) {
   User.findOne({ email: user.email }).then(savedUser =>	{
     if (savedUser) {
       throw new APIError(
-        consts.USER_ALREDY_EXISTS,
+        codes.USER_ALREDY_EXISTS,
         'User alredy exists',
         httpStatus.BAD_REQUEST,
         true
@@ -83,7 +83,7 @@ function create(req, res, next) {
     return user.saveAsync();
   }).then(savedUser => {
     res.json({
-      code: consts.CREATE_USER_SUCCESS,
+      code: codes.CREATE_USER_SUCCESS,
       status: 'success',
       data: savedUser
     });
@@ -97,12 +97,12 @@ function create(req, res, next) {
 function load(req, res, next, id) {
   User.get(id).then((user) => {
     if (!user) {
-      throw new APIError(consts.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true);
+      throw new APIError(codes.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true);
     }
     req.user = user;		// eslint-disable-line no-param-reassign
     return next();
   }).catch(e => {
-    next(new APIError(consts.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true));
+    next(new APIError(codes.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true));
     console.log(e);
   });
 }
@@ -113,7 +113,7 @@ function load(req, res, next, id) {
  */
 function get(req, res) {
   return res.json({
-    code: consts.USER_FOUND,
+    code: codes.USER_FOUND,
     status: 'success',
     data: req.user
   });
@@ -144,13 +144,13 @@ function update(req, res, next) {
 
   user.saveAsync()
     .then((savedUser) => res.json({
-      code: consts.UPDATE_USER_SUCCESS,
+      code: codes.UPDATE_USER_SUCCESS,
       status: 'success',
       data: savedUser
     }))
     .catch(e => {
       next(new APIError(
-        consts.UPDATE_USER_FAIL,
+        codes.UPDATE_USER_FAIL,
         'User update failed',
         httpStatus.INTERNAL_SERVER_ERROR,
         true
@@ -179,7 +179,7 @@ function remove(req, res, next) {
   const user = req.user;
   user.removeAsync()
     .then((deletedUser) => res.json({
-      code: consts.USER_DELETED,
+      code: codes.USER_DELETED,
       status: 'success',
       data: deletedUser
     }))

@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import chai from 'chai';
 import { expect } from 'chai';
 import app from '../app';
-import * as consts from '../config/consts';
+import * as codes from '../codes/';
 import { secret } from '../config/env';
 import { sign } from 'jsonwebtoken';
 
@@ -26,7 +26,7 @@ describe('## User APIs', () => {
         .send(user)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.code).to.equal(consts.CREATE_USER_SUCCESS);
+          expect(res.body.code).to.equal(codes.CREATE_USER_SUCCESS);
           expect(res.body.status).to.equal('success');
           expect(res.body.data.fullname).to.equal(user.fullname);
           expect(res.body.data.username).to.equal(user.username);
@@ -48,7 +48,7 @@ describe('## User APIs', () => {
         .send(user)
         .expect(httpStatus.BAD_REQUEST)
         .then(res => {
-          expect(res.body.code).to.equal(consts.USER_ALREDY_EXISTS);
+          expect(res.body.code).to.equal(codes.USER_ALREDY_EXISTS);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('User alredy exists');
           done();
@@ -66,7 +66,7 @@ describe('## User APIs', () => {
         })
         .expect(httpStatus.BAD_REQUEST)
         .then(res => {
-          expect(res.body.code).to.equal(consts.VALIDATION_ERROR);
+          expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
           expect(res.body.message)
             .to
             .equal('"fullname" is required and "username" is required');
@@ -85,9 +85,9 @@ describe('## User APIs', () => {
         })
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.code).to.equal(consts.LOGIN_SUCCESS);
+          expect(res.body.code).to.equal(codes.LOGIN_SUCCESS);
           expect(res.body.status).to.equal('success');
-          const token = sign(user.username, secret, { expiresIn: consts.JWT_EXPIRES_IN });
+          const token = sign(user.username, secret, { expiresIn: codes.JWT_EXPIRES_IN });
           expect(res.body.data).to.equal(token);
           user.auth = token;
           done();
@@ -105,7 +105,7 @@ describe('## User APIs', () => {
         })
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
-          expect(res.body.code).to.equal(consts.LOGIN_FAIL);
+          expect(res.body.code).to.equal(codes.LOGIN_FAIL);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('Username or password invalid.');
           done();
@@ -124,7 +124,7 @@ describe('## User APIs', () => {
         })
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
-          expect(res.body.code).to.equal(consts.LOGIN_FAIL);
+          expect(res.body.code).to.equal(codes.LOGIN_FAIL);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('Username or password invalid.');
           done();
@@ -143,7 +143,7 @@ describe('## User APIs', () => {
         .set('auth', user.auth)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.code).to.equal(consts.USER_FOUND);
+          expect(res.body.code).to.equal(codes.USER_FOUND);
           expect(res.body.status).to.equal('success');
           expect(res.body.data.fullname).to.equal(user.fullname);
           expect(res.body.data.username).to.equal(user.username);
@@ -164,7 +164,7 @@ describe('## User APIs', () => {
         .set('auth', user.auth)
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
-          expect(res.body.code).to.equal(consts.USER_NOT_FOUND);
+          expect(res.body.code).to.equal(codes.USER_NOT_FOUND);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('User not found');
           done();
@@ -179,7 +179,7 @@ describe('## User APIs', () => {
         .get('/api/users/56c787ccc67fc16ccc1a5e92')
         .expect(httpStatus.FORBIDDEN)
         .then(res => {
-          expect(res.body.code).to.equal(consts.INVALID_TOKEN);
+          expect(res.body.code).to.equal(codes.INVALID_TOKEN);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('Invalid token');
           done();
@@ -199,7 +199,7 @@ describe('## User APIs', () => {
         .send(user)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.code).to.equal(consts.UPDATE_USER_SUCCESS);
+          expect(res.body.code).to.equal(codes.UPDATE_USER_SUCCESS);
           expect(res.body.status).to.equal('success');
           expect(res.body.data.fullname).to.equal(user.fullname);
           expect(res.body.data.username).to.equal('KK');
@@ -238,7 +238,7 @@ describe('## User APIs', () => {
         .set('auth', user.auth)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.code).to.equal(consts.USER_DELETED);
+          expect(res.body.code).to.equal(codes.USER_DELETED);
           expect(res.body.status).to.equal('success');
           expect(res.body.data.fullname).to.equal(user.fullname);
           expect(res.body.data.username).to.equal('KK');

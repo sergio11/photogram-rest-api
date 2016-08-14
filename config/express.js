@@ -14,6 +14,8 @@ import routes from '../server/routes';
 import config from './env';
 import APIError from '../server/helpers/APIError';
 import * as codes from '../server/codes/';
+import jwt from 'express-jwt';
+import { secret } from './env';
 
 const app = express();
 
@@ -46,6 +48,9 @@ if (config.env === 'development') {
     colorStatus: true 	// Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
   }));
 }
+// verify token
+app.use(jwt({ secret, requestProperty: 'auth' })
+  .unless({ path: ['/api/health-check', '/api/404', /^\/api\/accounts\/*/] }));
 
 // mount all routes on /api path
 app.use('/api', routes);
@@ -58,7 +63,12 @@ app.use((err, req, res, next) => {
     const error = new APIError(codes.VALIDATION_ERROR, unifiedErrorMessage, err.status, true);
     return next(error);
   } else if (!(err instanceof APIError)) {
-    const apiError = new APIError(err.code, err.message, err.status, err.isPublic);
+    let apiError;
+    if (err.name === 'UnauthorizedError') {
+      apiError = new APIError(codes.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true);
+    } else {
+      apiError = new APIError(err.code, err.message, err.status, err.isPublic);
+    }
     return next(apiError);
   }
   return next(err);

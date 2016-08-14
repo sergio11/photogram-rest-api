@@ -4,8 +4,6 @@ import paramValidation from '../validations/user';
 import userCtrl from '../controllers/user';
 
 const router = express.Router();	// eslint-disable-line new-cap
-// verify JWT
-router.use(userCtrl.verifyToken);
 
 router.route('/')
   /** GET /api/users - Get list of users */

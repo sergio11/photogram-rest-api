@@ -1,8 +1,8 @@
 import User from '../models/user';
-import { sign, verify } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
+import { secret } from '../../config/env';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
-import { secret } from '../../config/env';
 import * as codes from '../codes/';
 
 /**
@@ -28,7 +28,7 @@ function login(req, res, next) {
           true
         );
       }
-      return sign(user.username, secret, { expiresIn: codes.JWT_EXPIRES_IN });
+      return sign(user.username, secret);
     });
   }).then(token => {
     res.json({
@@ -37,16 +37,6 @@ function login(req, res, next) {
       data: token
     });
   }).catch(e => next(e));
-}
-
-function verifyToken(req, res, next) {
-  const token = req.headers.auth;
-  verify(token, secret, tokenError => {
-    if (tokenError) {
-      next(new APIError(codes.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true));
-    }
-    next();
-  });
 }
 
 /**
@@ -186,4 +176,4 @@ function remove(req, res, next) {
     .catch((e) => next(e));
 }
 
-export default { load, get, create, update, list, remove, login, verifyToken };
+export default { load, get, create, update, list, remove, login };

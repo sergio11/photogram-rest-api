@@ -10,7 +10,6 @@ import { sign } from 'jsonwebtoken';
 chai.config.includeStack = false;
 
 describe('## User APIs', () => {
-
   const user = {
     fullname: 'Sergio Sánchez Sánchez',
     username: 'Sergio11',
@@ -88,7 +87,7 @@ describe('## User APIs', () => {
         .then(res => {
           expect(res.body.code).to.equal(codes.LOGIN_SUCCESS);
           expect(res.body.status).to.equal('success');
-          const token = sign(user.username, secret, { expiresIn: codes.JWT_EXPIRES_IN });
+          const token = sign(user.username, secret);
           expect(res.body.data).to.equal(token);
           user.auth = token;
           done();
@@ -141,7 +140,7 @@ describe('## User APIs', () => {
     it('should get user details', (done) => {
       request(app)
         .get(`/api/users/${user._id}`)
-        .set('auth', user.auth)
+        .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.code).to.equal(codes.USER_FOUND);
@@ -162,7 +161,7 @@ describe('## User APIs', () => {
     it('should report error with message - Not found, when user does not exists', (done) => {
       request(app)
         .get('/api/users/56c787ccc67fc16ccc1a5e92')
-        .set('auth', user.auth)
+        .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
           expect(res.body.code).to.equal(codes.USER_NOT_FOUND);
@@ -196,7 +195,7 @@ describe('## User APIs', () => {
       user.username = 'KK';
       request(app)
         .put(`/api/users/${user._id}`)
-        .set('auth', user.auth)
+        .set('authorization', `Bearer ${user.auth}`)
         .send(user)
         .expect(httpStatus.OK)
         .then(res => {
@@ -220,7 +219,7 @@ describe('## User APIs', () => {
     it('should get all users', (done) => {
       request(app)
         .get('/api/users')
-        .set('auth', user.auth)
+        .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body).to.be.an('array');
@@ -236,7 +235,7 @@ describe('## User APIs', () => {
     it('should delete user', (done) => {
       request(app)
         .delete(`/api/users/${user._id}`)
-        .set('auth', user.auth)
+        .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.code).to.equal(codes.USER_DELETED);

@@ -8,6 +8,9 @@ router.route('/:id')
   /** GET /media/media-id - Get information about media object */
   .get(paramValidation(paramValidation.get), mediaCtrl.get);
 
+/** GET /media/search  Search for recent media in a given area. **/
+router.get('/search', paramValidation(paramValidation.search), mediaCtrl.search);
+
 /** Load media when API with id route parameter is hit */
 router.param('id', mediaCtrl.load);
 

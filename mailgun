@@ -11,3 +11,12 @@ curl -s --user 'api:key-2b5494b281d62bb4829bd9856d937970' \
 MongoDB 2.4
 
 db.addUser({ user: "sergio11",  pwd: "sergio11", roles: [ "clusterAdmin", "readAnyDatabase" ]})
+
+MongoDB 3.2
+
+db.createUser( { user: "sergio11",
+                 pwd: "sergio11",
+                 roles: [ { role: "clusterAdmin", db: "admin" },
+                          { role: "readAnyDatabase", db: "admin" },
+                          "readWrite"] },
+               { w: "majority" , wtimeout: 5000 } );

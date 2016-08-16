@@ -7,5 +7,12 @@ export default {
     params: {
       id: Joi.objectId()
     }
+  },
+  // GET /media/search
+  search: {
+    param: {
+      lon: Joi.number().precision(8),
+      lat: Joi.number().precision(8)
+    }
   }
 };

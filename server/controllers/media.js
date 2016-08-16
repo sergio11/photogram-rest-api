@@ -30,4 +30,24 @@ function get(req, res) {
   });
 }
 
-export default { load, get };
+/**
+* Search for recent media in a given area.
+* @returns {Media[]}
+*/
+
+function search(req, res, next) {
+  Media.search(req.lat, req.lon).then(medias => {
+    if (!medias || medias.length === 0) {
+      throw new APIError(codes.MEDIA_NOT_FOUND, 'Media not found', httpStatus.NOT_FOUND, true);
+    }
+    return res.json({
+      code: codes.MEDIA_FOUND,
+      status: 'success',
+      data: req.media
+    });
+  }).catch(e => {
+    next(e);
+  });
+}
+
+export default { load, get, search };

@@ -10,7 +10,7 @@ export default {
   },
   // GET /media/search
   search: {
-    param: {
+    params: {
       lon: Joi.number().precision(8),
       lat: Joi.number().precision(8)
     }

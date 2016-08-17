@@ -158,6 +158,22 @@ describe('## User APIs', () => {
         });
     });
 
+    it('should report error with message - Not found, when id is invalid', (done) => {
+      request(app)
+        .get(`/api/users/dsadas232`)
+        .set('authorization', `Bearer ${user.auth}`)
+        .expect(httpStatus.NOT_FOUND)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.USER_NOT_FOUND);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('User not found');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
     it('should report error with message - Not found, when user does not exists', (done) => {
       request(app)
         .get('/api/users/56c787ccc67fc16ccc1a5e92')

@@ -5,7 +5,7 @@ export default {
   // GET /api/users/:id
   get: {
     params: {
-      userId: Joi.objectId()
+      id: Joi.objectId()
     }
   },
   // UPDATE /api/users/:id
@@ -20,13 +20,13 @@ export default {
       mobileNumber: Joi.string().regex(/^[1-9]{9}$/).required()
     },
     params: {
-      userId: Joi.objectId()
+      id: Joi.objectId()
     }
   },
   // DELETE  /api/users/:id
   deleteUser: {
     params: {
-      userId: Joi.objectId()
+      id: Joi.objectId()
     }
   }
 };

@@ -86,14 +86,11 @@ function create(req, res, next) {
  */
 function load(req, res, next, id) {
   User.get(id).then((user) => {
-    if (!user) {
-      throw new APIError(codes.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true);
-    }
     req.user = user;		// eslint-disable-line no-param-reassign
     return next();
   }).catch(e => {
-    next(new APIError(codes.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true));
     console.log(e);
+    next(new APIError(codes.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true));
   });
 }
 

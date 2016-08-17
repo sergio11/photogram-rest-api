@@ -1,7 +1,5 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
-import httpStatus from 'http-status';
-import APIError from '../helpers/APIError';
 import bcrypt from 'bcrypt';
 
 // promisify bcrypt
@@ -91,11 +89,10 @@ UserSchema.statics = {
   get(id) {
     return this.findById(id)
       .execAsync().then((user) => {
-        if (user) {
-          return user;
+        if (!user) {
+          return Promise.reject(new Error('No such user exists!'));
         }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
+        return user;
       });
   },
 

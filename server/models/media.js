@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import httpStatus from 'http-status';
-import APIError from '../helpers/APIError';
+
 
 const MediaSchema = new mongoose.Schema({
   type: {
@@ -45,11 +44,10 @@ MediaSchema.statics = {
       .populate('_user')
       .execAsync()
       .then(media => {
-        if (media) {
-          return media;
+        if (!media) {
+          return Promise.reject(new Error('No such media exists!'));
         }
-        const err = new APIError('No such media exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
+        return media;
       });
   },
   /**

@@ -1,7 +1,9 @@
 import Media from '../models/media';
+import Comment from '../models/comment';
 import APIError from '../helpers/APIError';
 import httpStatus from 'http-status';
 import codes from '../codes/media';
+import { Observable } from 'rx/Rx';
 
 /**
  * Load media and append to req.
@@ -36,18 +38,48 @@ function get(req, res) {
 */
 
 function search(req, res, next) {
-  Media.search(req.lat, req.lon).then(medias => {
+  Observable.fromPromise(Media.search(req.lat, req.lon))
+  .flatMap(medias => {
     if (!medias || medias.length === 0) {
       throw new APIError(codes.MEDIA_NOT_FOUND, 'Media not found', httpStatus.NOT_FOUND, true);
     }
-    return res.json({
+    return Observable.fromArray(medias);
+  })
+  .flatMap(media => Observable.fromPromise(
+    Comment.getCommentsCountForMedia(media._id)
+  ).zip(Observable.just(media), (comments, media2) => {
+    console.log('Comments: ', comments);
+    console.log('Media: ', media2);
+  }))
+  .subscribe(
+    medias => res.json({
       code: codes.MEDIA_FOUND,
       status: 'success',
-      data: req.media
-    });
-  }).catch(e => {
-    next(e);
-  });
+      data: medias
+    }),
+    err => next(err)
+  );
 }
 
-export default { load, get, search };
+/**
+ * Create new media
+ * @property {string} req.body.type - The media's type
+ * @property {string} req.body.caption - The media's caption
+ * @property {string} req.body.link - The media's link
+ * @property {Number} req.body.location - The media's location
+ * @property {ObjectId} req.body._user - The media's owner
+ * @returns {Media}
+ */
+function create(req, res) {
+  const media = new Media({
+    type: req.body.type,
+    caption: req.body.caption,
+    link: req.body.link,
+    location: req.body.location,
+    _user: req.body._user
+  });
+  res.send(media);
+  console.log('Media: ', media);
+}
+
+export default { load, get, search, create };

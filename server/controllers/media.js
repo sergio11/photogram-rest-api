@@ -97,4 +97,21 @@ function create(req, res, next) {
     });
 }
 
-export default { load, get, search, create };
+/**
+ * Delete Media.
+ * @returns {Media}
+ */
+function remove(req, res, next) {
+  const media = req.media;
+  media.removeAsync()
+    .then(deletedMedia => {
+      res.json({
+        code: codes.MEDIA_DELETED,
+        status: 'success',
+        data: deletedMedia
+      });
+    })
+    .catch((e) => next(e));
+}
+
+export default { load, get, search, create, remove };

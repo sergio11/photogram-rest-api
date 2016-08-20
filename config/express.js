@@ -16,6 +16,7 @@ import APIError from '../server/helpers/APIError';
 import * as codes from '../server/codes/';
 import jwt from 'express-jwt';
 import { secret } from './env';
+import user from './connectRoles';
 
 const app = express();
 
@@ -23,6 +24,8 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 }
 
+// connect roles middleware
+app.use(user.middleware());
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

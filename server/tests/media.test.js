@@ -9,7 +9,7 @@ import * as codes from '../codes/';
 chai.config.includeStack = true;
 
 const token = 'eyJhbGciOiJIUzI1NiJ9.U2VyZ2lvMTE.X8xCcmI0yqAGxIULFgSZv1_2JsxHR-Y9Ka5qzY1HJMU';
-
+const anotherToken = 'eyJhbGciOiJIUzI1NiJ9.bWFyY29z.WteCILBidoG7nF-ETMX1IJEVDX_TisASHanbb5Ra_K8';
 const media = {
   type: 'image',
   caption: 'Imagen de prueba',
@@ -92,6 +92,44 @@ describe('## Media API', () => {
       .expect(httpStatus.OK)
       .then(res => {
         expect(res.body.code).to.equal(codes.MEDIA_FOUND);
+        expect(res.body.status).to.equal('success');
+        expect(res.body.data.caption).to.equal(media.caption);
+        expect(res.body.data.type).to.equal(media.type);
+        expect(res.body.data.link).to.equal(media.link);
+        expect(res.body.data._user.fullname).to.equal(user.fullname);
+        expect(res.body.data._user.username).to.equal(user.username);
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('should not delete media - Access Denied', (done) => {
+    request(app)
+      .delete(`/api/media/${media._id}`)
+      .set('authorization', `Bearer ${anotherToken}`)
+      .expect(httpStatus.FORBIDDEN)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.ACCESS_DENIED);
+        expect(res.body.status).to.equal('error');
+        expect(res.body.message)
+          .to
+          .equal('Access Denied - You don\'t have permission to: delete media');
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('should delete media', (done) => {
+    request(app)
+      .delete(`/api/media/${media._id}`)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.OK)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.MEDIA_DELETED);
         expect(res.body.status).to.equal('success');
         expect(res.body.data.caption).to.equal(media.caption);
         expect(res.body.data.type).to.equal(media.type);

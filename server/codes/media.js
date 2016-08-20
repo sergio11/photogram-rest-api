@@ -4,3 +4,6 @@ export const MEDIA_NOT_FOUND = 6005;
 // post media
 export const CREATE_MEDIA_SUCCESS = 7000;
 export const CREATE_MEDIA_FAIL = 7005;
+// delete media
+// post media
+export const MEDIA_DELETED = 8000;

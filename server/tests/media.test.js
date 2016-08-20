@@ -11,10 +11,11 @@ chai.config.includeStack = true;
 const token = 'eyJhbGciOiJIUzI1NiJ9.U2VyZ2lvMTE.X8xCcmI0yqAGxIULFgSZv1_2JsxHR-Y9Ka5qzY1HJMU';
 const anotherToken = 'eyJhbGciOiJIUzI1NiJ9.bWFyY29z.WteCILBidoG7nF-ETMX1IJEVDX_TisASHanbb5Ra_K8';
 const media = {
-  type: 'image',
+  type: 'IMAGE',
   caption: 'Imagen de prueba',
   link: 'https://www.mediastorage.com/fhjakhfjah4324234jhjkfsdf',
-  location: [0, 0]
+  location: [-5.671007, 40.965470],
+  user: '123456'
 };
 
 describe('## Media API', () => {
@@ -27,10 +28,7 @@ describe('## Media API', () => {
     mobileNumber: '673445695'
   });
 
-  before(() => user.saveAsync().then(savedUser => {
-    media.user = savedUser._id;
-    return savedUser;
-  }));
+  before(() => user.saveAsync());
 
   it('should report error with message - Forbidden', (done) => {
     request(app)
@@ -40,6 +38,24 @@ describe('## Media API', () => {
         expect(res.body.code).to.equal(codes.INVALID_TOKEN);
         expect(res.body.status).to.equal('error');
         expect(res.body.message).to.equal('Invalid token');
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('should not create media - invalid user id', (done) => {
+    request(app)
+      .post('/api/media')
+      .set('authorization', `Bearer ${token}`)
+      .send(media)
+      .expect(httpStatus.BAD_REQUEST)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
+        expect(res.body.status).to.equal('error');
+        media.user = user._id;
+        media.type = 'image';
         done();
       })
       .catch(err => {
@@ -58,6 +74,25 @@ describe('## Media API', () => {
         expect(res.body.status).to.equal('error');
         expect(res.body.message).to.equal('\"type\" must be one of [IMAGE, VIDEO]');
         media.type = 'IMAGE';
+        media.location = [1, 'dsadasdas'];
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('should not create media - invalid location "1" must be a number', (done) => {
+    request(app)
+      .post('/api/media')
+      .set('authorization', `Bearer ${token}`)
+      .send(media)
+      .expect(httpStatus.BAD_REQUEST)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
+        expect(res.body.status).to.equal('error');
+        expect(res.body.message).to.equal('"1" must be a number');
+        media.location = [-5.671007, 40.965470];
         done();
       })
       .catch(err => {

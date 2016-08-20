@@ -76,26 +76,6 @@ describe('## User APIs', () => {
   });
 
   describe('# POST /accounts/login', () => {
-    it('should authenticate the user', (done) => {
-      request(app)
-        .post('/api/accounts/signin')
-        .send({
-          username: 'Sergio11',
-          password: 'sergio11Bisite'
-        })
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.code).to.equal(codes.LOGIN_SUCCESS);
-          expect(res.body.status).to.equal('success');
-          const token = sign(user.username, secret);
-          expect(res.body.data).to.equal(token);
-          user.auth = token;
-          done();
-        }).catch(err => {
-          console.error('ERROR : ', err.response.text);
-        });
-    });
-
     it('should not authenticate the user - Username incorrect', (done) => {
       request(app)
         .post('/api/accounts/signin')
@@ -130,6 +110,26 @@ describe('## User APIs', () => {
           done();
         })
         .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should authenticate the user', (done) => {
+      request(app)
+        .post('/api/accounts/signin')
+        .send({
+          username: 'Sergio11',
+          password: 'sergio11Bisite'
+        })
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.LOGIN_SUCCESS);
+          expect(res.body.status).to.equal('success');
+          const token = sign(user.username, secret);
+          expect(res.body.data).to.equal(token);
+          user.auth = token;
+          done();
+        }).catch(err => {
           console.error('ERROR : ', err.response.text);
         });
     });

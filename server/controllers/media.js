@@ -2,8 +2,8 @@ import Media from '../models/media';
 import Comment from '../models/comment';
 import APIError from '../helpers/APIError';
 import httpStatus from 'http-status';
-import codes from '../codes/media';
-import { Observable } from 'rx/Rx';
+import * as codes from '../codes/media';
+import { Observable } from 'rxjs/Rx';
 
 /**
  * Load media and append to req.
@@ -70,16 +70,31 @@ function search(req, res, next) {
  * @property {ObjectId} req.body._user - The media's owner
  * @returns {Media}
  */
-function create(req, res) {
+function create(req, res, next) {
   const media = new Media({
     type: req.body.type,
     caption: req.body.caption,
     link: req.body.link,
     location: req.body.location,
-    _user: req.body._user
+    _user: req.body.user
   });
-  res.send(media);
-  console.log('Media: ', media);
+  media.saveAsync()
+    .then(savedMedia => {
+      res.json({
+        code: codes.CREATE_MEDIA_SUCCESS,
+        status: 'success',
+        data: savedMedia
+      });
+    })
+    .catch(e => {
+      console.log(e);
+      next(new APIError(
+        codes.CREATE_MEDIA_FAIL,
+        'Create Media Fail',
+        httpStatus.INTERNAL_SERVER_ERROR,
+        true)
+      );
+    });
 }
 
 export default { load, get, search, create };

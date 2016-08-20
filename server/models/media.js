@@ -41,7 +41,7 @@ MediaSchema.statics = {
    */
   get(id) {
     return this.findById(id)
-      .populate('_user')
+      .populate('_user', '_id fullname username')
       .execAsync()
       .then(media => {
         if (!media) {

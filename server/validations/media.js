@@ -4,9 +4,7 @@ Joi.objectId = require('joi-objectid')(Joi);
 export default {
   // GET /media/media-id
   get: {
-    params: {
-      id: Joi.objectId()
-    }
+    params: {}
   },
   // GET /media/search
   search: {
@@ -17,6 +15,12 @@ export default {
   },
   // POST /media
   create: {
-    params: {}
+    body: {
+      type: Joi.string().required().valid(['IMAGE', 'VIDEO']),
+      caption: Joi.string().optional().min(6),
+      link: Joi.string().required(),
+      location: Joi.array().length(2).items(Joi.number().precision(8)),
+      user: Joi.objectId().required()
+    }
   }
 };

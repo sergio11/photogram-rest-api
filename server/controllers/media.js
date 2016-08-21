@@ -11,7 +11,12 @@ import { Observable } from 'rxjs/Rx';
 function load(req, res, next, id) {
   Media.get(id).then(media => {
     if (!media) {
-      throw new APIError(codes.MEDIA_NOT_FOUND, 'Media not found', httpStatus.NOT_FOUND, true);
+      throw new APIError(
+        codes.MEDIA_NOT_FOUND,
+        res.__('Media not found'),
+        httpStatus.NOT_FOUND,
+        true
+      );
     }
     req.media = media;		// eslint-disable-line no-param-reassign
     return next();
@@ -41,7 +46,12 @@ function search(req, res, next) {
   Observable.fromPromise(Media.search(req.lat, req.lon))
   .flatMap(medias => {
     if (!medias || medias.length === 0) {
-      throw new APIError(codes.MEDIA_NOT_FOUND, 'Media not found', httpStatus.NOT_FOUND, true);
+      throw new APIError(
+        codes.MEDIA_NOT_FOUND,
+        res.__('Media not found'),
+        httpStatus.NOT_FOUND,
+        true
+      );
     }
     return Observable.fromArray(medias);
   })
@@ -90,7 +100,7 @@ function create(req, res, next) {
       console.log(e);
       next(new APIError(
         codes.CREATE_MEDIA_FAIL,
-        'Create Media Fail',
+        res.__('Create Media Fail'),
         httpStatus.INTERNAL_SERVER_ERROR,
         true)
       );

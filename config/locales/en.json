@@ -1,0 +1,11 @@
+{
+	"API not found": "API not found",
+	"Invalid Token": "Invalid token",
+	"Access Denied - You don't have permission to: %s": "Access Denied - You don't have permission to: %s",
+	"Username or password invalid": "Username or password invalid.",
+	"User alredy exists": "User alredy exists",
+	"User not found": "User not found",
+	"User update failed": "User update failed",
+	"Media not found": "Media not found",
+	"Create Media Fail": "Create Media Fail"
+}

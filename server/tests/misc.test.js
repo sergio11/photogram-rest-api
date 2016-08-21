@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import app from '../app';
 import * as codes from '../codes/';
 
+
 chai.config.includeStack = true;
 
 describe('## Misc', () => {
@@ -24,11 +25,13 @@ describe('## Misc', () => {
     it('should return 404 status', (done) => {
       request(app)
         .get('/api/404')
+        .query({ lang: 'es' })
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
+          console.log(res.body);
           expect(res.body.code).to.equal(codes.API_NOT_FOUND);
           expect(res.body.status).to.equal('error');
-          expect(res.body.message).to.equal('API not found');
+          expect(res.body.message).to.equal('API no encontrada');
           done();
         });
     });

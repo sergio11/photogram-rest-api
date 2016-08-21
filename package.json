@@ -49,6 +49,7 @@
     "express-winston": "^1.2.0",
     "helmet": "2.1.1",
     "http-status": "^0.2.0",
+    "i18n": "^0.8.3",
     "joi": "8.4.2",
     "joi-objectid": "^2.0.0",
     "jsonwebtoken": "^5.7.0",

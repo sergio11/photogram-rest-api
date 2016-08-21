@@ -7,7 +7,7 @@ const user = new ConnectRoles({
   failureHandler: (req, res, action) => {
     throw new APIError(
       codes.ACCESS_DENIED,
-      `Access Denied - You don\'t have permission to: ${action}`,
+      res.__('Access Denied - You don\'t have permission to: %s', action),
       httpStatus.FORBIDDEN,
       true
     );

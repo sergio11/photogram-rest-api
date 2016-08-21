@@ -1,0 +1,11 @@
+{
+  "API not found": "API no encontrada",
+  "Invalid Token": "Token inválido",
+  "Access Denied - You don't have permission to: %s": "Acceso denegado - no tienes permisos para realizar la acción : %s",
+  "Username or password invalid": "Usuario o contraseña no válido",
+	"User alredy exists": "El usuario ya existe",
+	"User not found": "Usuario no encontrado",
+	"User update failed": "Fallo al actualizar el usuario",
+  "Media not found": "Elemento multimedia no encontrado",
+	"Create Media Fail": "Fallo al registrar el elemento multimedia"
+}

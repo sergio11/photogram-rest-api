@@ -17,6 +17,15 @@ import * as codes from '../server/codes/';
 import jwt from 'express-jwt';
 import { secret } from './env';
 import user from './connectRoles';
+import i18n from 'i18n';
+
+// setup i18n configuration
+i18n.configure({
+  locales: ['en', 'es'],
+  directory: `${__dirname}/locales`,
+  queryParameter: 'lang',
+  defaultLocale: 'en'
+});
 
 const app = express();
 
@@ -24,6 +33,8 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 }
 
+// using 'accept-language' header to guess language settings
+app.use(i18n.init);
 // connect roles middleware
 app.use(user.middleware());
 // parse body params and attache them to req.body
@@ -68,7 +79,12 @@ app.use((err, req, res, next) => {
   } else if (!(err instanceof APIError)) {
     let apiError;
     if (err.name === 'UnauthorizedError') {
-      apiError = new APIError(codes.INVALID_TOKEN, 'Invalid token', httpStatus.FORBIDDEN, true);
+      apiError = new APIError(
+        codes.INVALID_TOKEN,
+        res.__('Invalid Token'),
+        httpStatus.FORBIDDEN,
+        true
+      );
     } else {
       apiError = new APIError(err.code, err.message, err.status, err.isPublic);
     }
@@ -79,7 +95,12 @@ app.use((err, req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new APIError(codes.API_NOT_FOUND, 'API not found', httpStatus.NOT_FOUND, true);
+  const err = new APIError(
+    codes.API_NOT_FOUND,
+    res.__('API not found'),
+    httpStatus.NOT_FOUND,
+    true
+   );
   return next(err);
 });
 

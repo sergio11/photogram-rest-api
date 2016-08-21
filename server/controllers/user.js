@@ -14,7 +14,7 @@ function login(req, res, next) {
     if (!user) {
       throw new APIError(
         codes.LOGIN_FAIL,
-        'Username or password invalid.',
+        res.__('Username or password invalid.'),
         httpStatus.NOT_FOUND,
         true
        );
@@ -23,7 +23,7 @@ function login(req, res, next) {
       if (!isMatch) {
         throw new APIError(
           codes.LOGIN_FAIL,
-          'Username or password invalid.',
+          res.__('Username or password invalid.'),
           httpStatus.NOT_FOUND,
           true
         );
@@ -65,7 +65,7 @@ function create(req, res, next) {
     if (savedUser) {
       throw new APIError(
         codes.USER_ALREDY_EXISTS,
-        'User alredy exists',
+        res.__('User alredy exists'),
         httpStatus.BAD_REQUEST,
         true
       );
@@ -90,7 +90,7 @@ function load(req, res, next, id) {
     return next();
   }).catch(e => {
     console.log(e);
-    next(new APIError(codes.USER_NOT_FOUND, 'User not found', httpStatus.NOT_FOUND, true));
+    next(new APIError(codes.USER_NOT_FOUND, res.__('User not found'), httpStatus.NOT_FOUND, true));
   });
 }
 
@@ -138,7 +138,7 @@ function update(req, res, next) {
     .catch(e => {
       next(new APIError(
         codes.UPDATE_USER_FAIL,
-        'User update failed',
+        res.__('User update failed'),
         httpStatus.INTERNAL_SERVER_ERROR,
         true
       ));

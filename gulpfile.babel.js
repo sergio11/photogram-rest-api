@@ -147,9 +147,17 @@ gulp.task('mocha', ['clean'], () => {
 // gulp serve for development
 gulp.task('serve', ['clean'], () => runSequence('nodemon'));
 
+// generate API doc
+gulp.task('apidoc', done => {
+  plugins.apidoc({
+    src: 'server/routes/',
+    dest: 'dist/doc/'
+  }, done);
+});
+
 // default task: clean dist, compile js files and copy non-js files.
 gulp.task('default', ['clean'], () => {
   runSequence(
-    ['copy', 'babel']
+    ['copy', 'babel', 'apidoc']
   );
 });

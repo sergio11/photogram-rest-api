@@ -6,17 +6,31 @@ import userCtrl from '../controllers/user';
 const router = express.Router();	// eslint-disable-line new-cap
 
 router.route('/')
-  /** GET /api/users - Get list of users */
+  /**
+  * @api {get} /api/users - Get list of users.
+  * @apiName GetUsers
+  * @apiGroup Users
+  */
   .get(userCtrl.list);
 
 router.route('/:id')
-  /** GET /api/users/:userId - Get user */
+  /**
+  * @api {get} /api/users/:userId - Get user.
+  * @apiName GetUserDetail
+  * @apiGroup Users
+  */
   .get(validate(paramValidation.get), userCtrl.get)
-
-  /** PUT /api/users/:userId - Update user */
+  /**
+  * @api {put} /api/users/:userId - Update user.
+  * @apiName UdateUser
+  * @apiGroup Users
+  */
   .put(validate(paramValidation.updateUser), userCtrl.update)
-
-  /** DELETE /api/users/:userId - Delete user */
+  /**
+  * @api {delete} /api/users/:userId - Delete user.
+  * @apiName DeleteUser
+  * @apiGroup Users
+  */
   .delete(validate(paramValidation.deleteUser), userCtrl.remove);
 
 /** Load user when API with userId route parameter is hit */

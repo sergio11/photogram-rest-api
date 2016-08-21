@@ -32,7 +32,7 @@ describe('## Media API', () => {
 
   it('should report error with message - Forbidden', (done) => {
     request(app)
-      .get('/api/media')
+      .post('/api/media')
       .expect(httpStatus.FORBIDDEN)
       .then(res => {
         expect(res.body.code).to.equal(codes.INVALID_TOKEN);

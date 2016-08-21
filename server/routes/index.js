@@ -5,7 +5,11 @@ import mediaRoutes from './media';
 
 const router = express.Router();	// eslint-disable-line new-cap
 
-/** GET /health-check - Check service health */
+/**
+* @api {get} /health-check Check service health
+* @apiName health-check
+* @apiGroup app
+*/
 router.get('/health-check', (req, res) =>
   res.send('OK')
 );

@@ -34,7 +34,9 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 }
 
-app.use(express.static(path.join(__dirname, '/../doc')));
+process.env.PWD = process.cwd();
+// can't use __dirname with Heroku.
+app.use(express.static(path.join(process.env.PWD, '/../doc')));
 // using 'accept-language' header to guess language settings
 app.use(i18n.init);
 // connect roles middleware

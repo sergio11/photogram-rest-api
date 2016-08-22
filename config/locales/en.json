@@ -8,5 +8,6 @@
 	"User update failed": "User update failed",
 	"Media not found": "Media not found",
 	"Create Media Fail": "Create Media Fail",
-	"Username or password invalid.": "Username or password invalid."
+	"Username or password invalid.": "Username or password invalid.",
+	"No such comments for media!": "No such comments for media!"
 }

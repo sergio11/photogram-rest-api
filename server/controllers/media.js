@@ -30,7 +30,7 @@ function load(req, res, next, id) {
  * @returns {Media}
  */
 function get(req, res) {
-  return res.json({
+  res.json({
     code: codes.MEDIA_FOUND,
     status: 'success',
     data: req.media

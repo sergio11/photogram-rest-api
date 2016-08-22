@@ -140,6 +140,22 @@ describe('## Media API', () => {
       });
   });
 
+  it('should not return comments', (done) => {
+    request(app)
+      .get(`/api/v1/media/${media._id}/comments`)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.NOT_FOUND)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.NO_COMMENTS_FOUND);
+        expect(res.body.status).to.equal('error');
+        expect(res.body.message).to.equal('No such comments for media!');
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err);
+      });
+  });
+
   it('should not delete media - Access Denied', (done) => {
     request(app)
       .delete(`/api/v1/media/${media._id}`)

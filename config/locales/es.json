@@ -7,5 +7,6 @@
 	"User not found": "Usuario no encontrado",
 	"User update failed": "Fallo al actualizar el usuario",
   "Media not found": "Elemento multimedia no encontrado",
-	"Create Media Fail": "Fallo al registrar el elemento multimedia"
+	"Create Media Fail": "Fallo al registrar el elemento multimedia",
+  "No such comments for media!": "No se han encontrado comentarios"
 }

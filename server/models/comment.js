@@ -9,6 +9,10 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  _media: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Media'
+  },
   _form: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -22,12 +26,13 @@ CommentSchema.statics = {
   /**
    * Get Comments Media Count
    * @param {ObjectId} id - The objectId of media.
-   * @returns {Promise<Media, APIError>}
+   * @returns {Promise<Integer, APIError>}
    */
   getCommentsCountForMedia(id) {
     return this.aggregate({
+      $match: { _media: id },
       $group: {
-        _id: id,
+        _media: id,
         count: {
           $sum: 1
         }
@@ -39,6 +44,21 @@ CommentSchema.statics = {
         return Promise.reject(new Error('No such comments for media!'));
       }
       return groups;
+    });
+  },
+  /**
+   * Get Media Comments
+   * @param {ObjectId} id - The objectId of media.
+   * @returns {Promise<Array[Comment], APIError>}
+   */
+  getCommentsForMedia(id) {
+    return this.find({ _media: id })
+    .execAsync()
+    .then(comments => {
+      if (!comments || !comments.length) {
+        throw new Error('No such comments for media!');
+      }
+      return comments;
     });
   }
 };

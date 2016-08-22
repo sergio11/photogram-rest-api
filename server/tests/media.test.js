@@ -32,7 +32,7 @@ describe('## Media API', () => {
 
   it('should report error with message - Forbidden', (done) => {
     request(app)
-      .post('/api/media')
+      .post('/api/v1/media')
       .expect(httpStatus.FORBIDDEN)
       .then(res => {
         expect(res.body.code).to.equal(codes.INVALID_TOKEN);
@@ -47,7 +47,7 @@ describe('## Media API', () => {
 
   it('should not create media - invalid user id', (done) => {
     request(app)
-      .post('/api/media')
+      .post('/api/v1/media')
       .set('authorization', `Bearer ${token}`)
       .send(media)
       .expect(httpStatus.BAD_REQUEST)
@@ -65,7 +65,7 @@ describe('## Media API', () => {
 
   it('should not create media - type must be one of [IMAGE, VIDEO]', (done) => {
     request(app)
-      .post('/api/media')
+      .post('/api/v1/media')
       .set('authorization', `Bearer ${token}`)
       .send(media)
       .expect(httpStatus.BAD_REQUEST)
@@ -84,7 +84,7 @@ describe('## Media API', () => {
 
   it('should not create media - invalid location "1" must be a number', (done) => {
     request(app)
-      .post('/api/media')
+      .post('/api/v1/media')
       .set('authorization', `Bearer ${token}`)
       .send(media)
       .expect(httpStatus.BAD_REQUEST)
@@ -102,7 +102,7 @@ describe('## Media API', () => {
 
   it(`should create a media for ${user.fullname}`, (done) => {
     request(app)
-      .post('/api/media')
+      .post('/api/v1/media')
       .set('authorization', `Bearer ${token}`)
       .send(media)
       .expect(httpStatus.OK)
@@ -122,7 +122,7 @@ describe('## Media API', () => {
 
   it('should get details of media', (done) => {
     request(app)
-      .get(`/api/media/${media._id}`)
+      .get(`/api/v1/media/${media._id}`)
       .set('authorization', `Bearer ${token}`)
       .expect(httpStatus.OK)
       .then(res => {
@@ -142,7 +142,7 @@ describe('## Media API', () => {
 
   it('should not delete media - Access Denied', (done) => {
     request(app)
-      .delete(`/api/media/${media._id}`)
+      .delete(`/api/v1/media/${media._id}`)
       .set('authorization', `Bearer ${anotherToken}`)
       .expect(httpStatus.FORBIDDEN)
       .then(res => {
@@ -160,7 +160,7 @@ describe('## Media API', () => {
 
   it('should delete media', (done) => {
     request(app)
-      .delete(`/api/media/${media._id}`)
+      .delete(`/api/v1/media/${media._id}`)
       .set('authorization', `Bearer ${token}`)
       .expect(httpStatus.OK)
       .then(res => {

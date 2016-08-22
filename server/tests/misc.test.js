@@ -9,10 +9,10 @@ import * as codes from '../codes/';
 chai.config.includeStack = true;
 
 describe('## Misc', () => {
-  describe('# GET /api/health-check', () => {
+  describe('# GET /api/v1/health-check', () => {
     it('should return OK', (done) => {
       request(app)
-        .get('/api/health-check')
+        .get('/api/v1/health-check')
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.text).to.equal('OK');
@@ -24,7 +24,7 @@ describe('## Misc', () => {
   describe('# GET /api/404', () => {
     it('should return 404 status', (done) => {
       request(app)
-        .get('/api/404')
+        .get('/api/v1/404')
         .query({ lang: 'es' })
         .expect(httpStatus.NOT_FOUND)
         .then(res => {

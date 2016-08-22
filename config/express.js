@@ -18,6 +18,7 @@ import jwt from 'express-jwt';
 import { secret } from './env';
 import user from './connectRoles';
 import i18n from 'i18n';
+import path from 'path';
 
 // setup i18n configuration
 i18n.configure({
@@ -33,6 +34,7 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 }
 
+app.use(express.static(path.join(__dirname, '/../doc')));
 // using 'accept-language' header to guess language settings
 app.use(i18n.init);
 // connect roles middleware
@@ -62,12 +64,14 @@ if (config.env === 'development') {
     colorStatus: true 	// Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
   }));
 }
+
+
 // verify token
 app.use(jwt({ secret, requestProperty: 'auth' })
-  .unless({ path: ['/api/health-check', '/api/404', /^\/api\/accounts\/*/] }));
+  .unless({ path: ['/api/v1/health-check', '/api/v1/404', /^\/api\/v1\/accounts\/*/] }));
 
 // mount all routes on /api path
-app.use('/api', routes);
+app.use('/api/v1', routes);
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {

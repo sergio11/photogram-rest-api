@@ -6,7 +6,8 @@ import mediaRoutes from './media';
 const router = express.Router();	// eslint-disable-line new-cap
 
 /**
-* @api {get} /health-check Check service health
+* @api {get} /api/v1/health-check Check service health
+* @apiVersion 1.0.0
 * @apiName health-check
 * @apiGroup app
 */

@@ -19,10 +19,10 @@ describe('## User APIs', () => {
     mobileNumber: '673445695'
   };
 
-  describe('# POST /accounts/signup', () => {
+  describe('# POST /api/v1/accounts/signup', () => {
     it('should create a new user', (done) => {
       request(app)
-        .post('/api/accounts/signup')
+        .post('/api/v1/accounts/signup')
         .send(user)
         .expect(httpStatus.OK)
         .then(res => {
@@ -44,7 +44,7 @@ describe('## User APIs', () => {
 
     it('should not create a new user', (done) => {
       request(app)
-        .post('/api/accounts/signup')
+        .post('/api/v1/accounts/signup')
         .send(user)
         .expect(httpStatus.BAD_REQUEST)
         .then(res => {
@@ -60,7 +60,7 @@ describe('## User APIs', () => {
 
     it('should handle express validation error - name and fullname required', (done) => {
       request(app)
-        .post('/api/accounts/signup')
+        .post('/api/v1/accounts/signup')
         .send({
           mobileNumber: '673445695'
         })
@@ -75,10 +75,10 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# POST /accounts/login', () => {
+  describe('# POST /api/v1/accounts/login', () => {
     it('should not authenticate the user - Username incorrect', (done) => {
       request(app)
-        .post('/api/accounts/signin')
+        .post('/api/v1/accounts/signin')
         .send({
           username: 'marcos',
           password: 'sergio11Bisite'
@@ -97,7 +97,7 @@ describe('## User APIs', () => {
 
     it('should not authenticate the user - password incorrect', (done) => {
       request(app)
-        .post('/api/accounts/signin')
+        .post('/api/v1/accounts/signin')
         .send({
           username: 'Sergio11',
           password: '123456'
@@ -116,7 +116,7 @@ describe('## User APIs', () => {
 
     it('should authenticate the user', (done) => {
       request(app)
-        .post('/api/accounts/signin')
+        .post('/api/v1/accounts/signin')
         .send({
           username: 'Sergio11',
           password: 'sergio11Bisite'
@@ -136,10 +136,10 @@ describe('## User APIs', () => {
   });
 
 
-  describe('# GET /api/users/:id', () => {
+  describe('# GET /api/v1/users/:id', () => {
     it('should get user details', (done) => {
       request(app)
-        .get(`/api/users/${user._id}`)
+        .get(`/api/v1/users/${user._id}`)
         .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {
@@ -160,7 +160,7 @@ describe('## User APIs', () => {
 
     it('should report error with message - Not found, when id is invalid', (done) => {
       request(app)
-        .get(`/api/users/dsadas232`)
+        .get(`/api/v1/users/dsadas232`)
         .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
@@ -176,7 +176,7 @@ describe('## User APIs', () => {
 
     it('should report error with message - Not found, when user does not exists', (done) => {
       request(app)
-        .get('/api/users/56c787ccc67fc16ccc1a5e92')
+        .get('/api/v1/users/56c787ccc67fc16ccc1a5e92')
         .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
@@ -192,7 +192,7 @@ describe('## User APIs', () => {
 
     it('should report error with message - Forbidden', (done) => {
       request(app)
-        .get('/api/users/56c787ccc67fc16ccc1a5e92')
+        .get('/api/v1/users/56c787ccc67fc16ccc1a5e92')
         .expect(httpStatus.FORBIDDEN)
         .then(res => {
           expect(res.body.code).to.equal(codes.INVALID_TOKEN);
@@ -206,11 +206,11 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# PUT /api/users/:id', () => {
+  describe('# PUT /api/v1/users/:id', () => {
     it('should update user details', (done) => {
       user.username = 'KK';
       request(app)
-        .put(`/api/users/${user._id}`)
+        .put(`/api/v1/users/${user._id}`)
         .set('authorization', `Bearer ${user.auth}`)
         .send(user)
         .expect(httpStatus.OK)
@@ -231,10 +231,10 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# GET /api/users/', () => {
+  describe('# GET /api/v1/users/', () => {
     it('should get all users', (done) => {
       request(app)
-        .get('/api/users')
+        .get('/api/v1/users')
         .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {
@@ -247,10 +247,10 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# DELETE /api/users/', () => {
+  describe('# DELETE /api/v1/users/', () => {
     it('should delete user', (done) => {
       request(app)
-        .delete(`/api/users/${user._id}`)
+        .delete(`/api/v1/users/${user._id}`)
         .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {

@@ -7,7 +7,8 @@ const router = express.Router();	// eslint-disable-line new-cap
 
 router.route('/')
   /**
-  * @api {get} /api/users - Get list of users.
+  * @api {get} /api/v1/users Get list of users.
+  * @apiVersion 1.0.0
   * @apiName GetUsers
   * @apiGroup Users
   */
@@ -15,19 +16,22 @@ router.route('/')
 
 router.route('/:id')
   /**
-  * @api {get} /api/users/:userId - Get user.
+  * @api {get} /api/v1/users/:userId Get user.
+  * @apiVersion 1.0.0
   * @apiName GetUserDetail
   * @apiGroup Users
   */
   .get(validate(paramValidation.get), userCtrl.get)
   /**
-  * @api {put} /api/users/:userId - Update user.
+  * @api {put} /api/v1/users/:userId Update user.
+  * @apiVersion 1.0.0
   * @apiName UdateUser
   * @apiGroup Users
   */
   .put(validate(paramValidation.updateUser), userCtrl.update)
   /**
-  * @api {delete} /api/users/:userId - Delete user.
+  * @api {delete} /api/v1/users/:userId Delete user.
+  * @apiVersion 1.0.0
   * @apiName DeleteUser
   * @apiGroup Users
   */

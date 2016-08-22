@@ -8,27 +8,31 @@ const router = express.Router();	// eslint-disable-line new-cap
 
 router.route('/:id')
   /**
-  * @api {get} /media/media-id - Get information about media object
+  * @api {get} /api/v1/media/media-id  Get information about media object
+  * @apiVersion 1.0.0
   * @apiName GetMedia
   * @apiGroup Media
   */
   .get(validate(paramValidation.get), mediaCtrl.get)
   /**
-  * @api {delete} /media/media-id -  Delete media object
+  * @api {delete} /api/v1/media/media-id  Delete media object
+  * @apiVersion 1.0.0
   * @apiName DeleteMedia
   * @apiGroup Media
   */
   .delete(user.can('delete media'), mediaCtrl.remove);
 
 /**
-* @api {post} /media - create media
+* @api {post} /api/v1/media Create media
+* @apiVersion 1.0.0
 * @apiName CreateMedia
 * @apiGroup Media
 */
 router.post('/', validate(paramValidation.create), mediaCtrl.create);
 
 /**
-* @api {get} /media/search - Search for recent media in a given area.
+* @api {get} /api/v1/media/search Search for recent media in a given area.
+* @apiVersion 1.0.0
 * @apiName SearchMedia
 * @apiGroup Media
 */

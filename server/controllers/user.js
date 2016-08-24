@@ -28,7 +28,7 @@ function login(req, res, next) {
           true
         );
       }
-      return sign(user.username, secret);
+      return sign(user.id, secret);
     });
   }).then(token => {
     res.json({

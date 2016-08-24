@@ -8,7 +8,7 @@ import * as codes from '../codes/';
 
 chai.config.includeStack = true;
 
-const token = 'eyJhbGciOiJIUzI1NiJ9.U2VyZ2lvMTE.X8xCcmI0yqAGxIULFgSZv1_2JsxHR-Y9Ka5qzY1HJMU';
+let token = null;
 const anotherToken = 'eyJhbGciOiJIUzI1NiJ9.bWFyY29z.WteCILBidoG7nF-ETMX1IJEVDX_TisASHanbb5Ra_K8';
 const media = {
   type: 'IMAGE',
@@ -16,6 +16,10 @@ const media = {
   link: 'https://www.mediastorage.com/fhjakhfjah4324234jhjkfsdf',
   location: [-5.671007, 40.965470],
   user: '123456'
+};
+const comment = {
+  text: 'Hola esto es un comentario de prueba ......',
+  from: '3123213'
 };
 
 describe('## Media API', () => {
@@ -28,7 +32,17 @@ describe('## Media API', () => {
     mobileNumber: '673445695'
   });
 
-  before(() => user.saveAsync());
+  before(() => user.saveAsync().then(savedUser =>
+    request(app)
+    .post('/api/v1/accounts/signin')
+    .send({
+      username: savedUser.username,
+      password: 'sergio11Bisite'
+    })
+  ).then(res => {
+    token = res.body.data;
+  })
+);
 
   it('should report error with message - Forbidden', (done) => {
     request(app)
@@ -131,6 +145,7 @@ describe('## Media API', () => {
         expect(res.body.data.caption).to.equal(media.caption);
         expect(res.body.data.type).to.equal(media.type);
         expect(res.body.data.link).to.equal(media.link);
+        expect(res.body.data.comments).to.equal(0);
         expect(res.body.data._user.fullname).to.equal(user.fullname);
         expect(res.body.data._user.username).to.equal(user.username);
         done();
@@ -152,7 +167,76 @@ describe('## Media API', () => {
         done();
       })
       .catch(err => {
-        console.error('ERROR : ', err);
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it(`should not create comment for media ${media._id} - Invalid objectid`, (done) => {
+    request(app)
+      .post(`/api/v1/media/${media._id}/comments`)
+      .send(comment)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.BAD_REQUEST)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
+        expect(res.body.status).to.equal('error');
+        comment.from = user._id;
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it(`should create comment for media ${media._id}`, (done) => {
+    request(app)
+      .post(`/api/v1/media/${media._id}/comments`)
+      .send(comment)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.OK)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.CREATE_COMMENT_SUCCESS);
+        expect(res.body.status).to.equal('success');
+        expect(res.body.data.text).to.equal(comment.text);
+        comment._id = res.body.data._id;
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('should not delete comment - Access Denied', (done) => {
+    request(app)
+      .delete(`/api/v1/media/${media._id}/comments/${comment._id}`)
+      .set('authorization', `Bearer ${anotherToken}`)
+      .expect(httpStatus.FORBIDDEN)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.ACCESS_DENIED);
+        expect(res.body.status).to.equal('error');
+        expect(res.body.message)
+          .to
+          .equal('Access Denied - You don\'t have permission to: delete comment');
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('should delete comment', (done) => {
+    request(app)
+      .delete(`/api/v1/media/${media._id}/comments/${comment._id}`)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.OK)
+      .then(res => {
+        console.log(res.body);
+        expect(res.body.code).to.equal(codes.COMMENT_DELETED);
+        expect(res.body.status).to.equal('success');
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
       });
   });
 

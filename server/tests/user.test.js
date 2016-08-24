@@ -75,7 +75,7 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# POST /api/v1/accounts/login', () => {
+  describe('# POST /api/v1/accounts/signin', () => {
     it('should not authenticate the user - Username incorrect', (done) => {
       request(app)
         .post('/api/v1/accounts/signin')
@@ -125,7 +125,7 @@ describe('## User APIs', () => {
         .then(res => {
           expect(res.body.code).to.equal(codes.LOGIN_SUCCESS);
           expect(res.body.status).to.equal('success');
-          const token = sign(user.username, secret);
+          const token = sign(user._id, secret);
           expect(res.body.data).to.equal(token);
           user.auth = token;
           done();

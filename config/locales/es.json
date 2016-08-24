@@ -8,5 +8,8 @@
 	"User update failed": "Fallo al actualizar el usuario",
   "Media not found": "Elemento multimedia no encontrado",
 	"Create Media Fail": "Fallo al registrar el elemento multimedia",
-  "No such comments for media!": "No se han encontrado comentarios"
+  "No such comments for media!": "No se han encontrado comentarios",
+  "Create Comment Fail": "Error al crear comentario",
+  "Comment not found": "Comentario no encontrado",
+  "Delete Comment Failed": "Error al borrar el comentario"
 }

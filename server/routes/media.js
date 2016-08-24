@@ -1,6 +1,7 @@
 import express from 'express';
 import validate from 'express-validation';
 import mediaValidation from '../validations/media';
+import commentValidation from '../validations/comment';
 import mediaCtrl from '../controllers/media';
 import commentCtrl from '../controllers/comment';
 import user from '../../config/connectRoles';
@@ -46,10 +47,29 @@ router.route('/:id/comments')
   * @apiName GetComments
   * @apiGroup Comments
   */
-  .get(commentCtrl.get);
+  .get(commentCtrl.get)
+  /**
+  * @api {post} /api/v1/media/media-id/comments  create comment for media object.
+  * @apiVersion 0.0.1
+  * @apiName CreateComment
+  * @apiGroup Comments
+  */
+  .post(validate(commentValidation.create), commentCtrl.create);
+
+
+router.route('/:id/comments/:commentId')
+  /**
+  * @api {delete} /api/v1/media/media-id/comments/comment-id  Delete comment
+  * @apiVersion 0.0.1
+  * @apiName DeleteComment
+  * @apiGroup Comments
+  */
+  .delete(user.can('delete comment'), commentCtrl.remove);
 
 
 /** Load media when API with id route parameter is hit */
 router.param('id', mediaCtrl.load);
+/** Load comment when API with commentId route parameter is hit */
+router.param('commentId', commentCtrl.load);
 
 export default router;

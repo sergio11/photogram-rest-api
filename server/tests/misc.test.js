@@ -28,7 +28,6 @@ describe('## Misc', () => {
         .query({ lang: 'es' })
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
-          console.log(res.body);
           expect(res.body.code).to.equal(codes.API_NOT_FOUND);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('API no encontrada');

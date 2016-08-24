@@ -4,6 +4,7 @@ import APIError from '../helpers/APIError';
 import httpStatus from 'http-status';
 import * as codes from '../codes/media';
 import { Observable } from 'rxjs/Rx';
+import _ from 'lodash';
 
 /**
  * Load media and append to req.
@@ -29,12 +30,20 @@ function load(req, res, next, id) {
  * Get Media
  * @returns {Media}
  */
-function get(req, res) {
-  res.json({
-    code: codes.MEDIA_FOUND,
-    status: 'success',
-    data: req.media
-  });
+function get(req, res, next) {
+  Observable.fromPromise(
+    Comment.getCommentsCountForMedia(req.media._id)
+  ).zip(
+    Observable.of(req.media),
+    (comments, media) => _.extend(media.toObject(), comments)
+  ).subscribe(
+    media => res.json({
+      code: codes.MEDIA_FOUND,
+      status: 'success',
+      data: media
+    }),
+    err => next(err)
+  );
 }
 
 /**

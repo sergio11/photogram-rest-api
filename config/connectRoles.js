@@ -14,6 +14,15 @@ const user = new ConnectRoles({
   }
 });
 
-user.use('delete media', req => req.media._user.username === req.auth);
+user.use('delete media', req => req.media._user._id.toString() === req.auth);
+
+user.use(
+  'delete comment',
+  req => {
+    const userObjectId = req.comment._media._user.toString();
+    const commentOwnerId = req.comment._from.toString();
+    return userObjectId === req.auth || commentOwnerId === req.auth;
+  }
+);
 
 export default user;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import Comment from './comment';
 
 const MediaSchema = new mongoose.Schema({
   type: {
@@ -28,6 +28,18 @@ const MediaSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }
+});
+
+/**
+ * Add your
+ * - pre-save hooks
+ * - validations
+ * - virtuals
+ */
+
+MediaSchema.pre('remove', function (next) {
+  Comment.remove({ _media: this._id }).exec();
+  next();
 });
 
 /**

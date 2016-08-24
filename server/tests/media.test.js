@@ -206,6 +206,44 @@ describe('## Media API', () => {
       });
   });
 
+  it(`should create another comment for media ${media._id}`, (done) => {
+    request(app)
+      .post(`/api/v1/media/${media._id}/comments`)
+      .send(comment)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.OK)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.CREATE_COMMENT_SUCCESS);
+        expect(res.body.status).to.equal('success');
+        expect(res.body.data.text).to.equal(comment.text);
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('media should have two commets', (done) => {
+    request(app)
+      .get(`/api/v1/media/${media._id}`)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.OK)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.MEDIA_FOUND);
+        expect(res.body.status).to.equal('success');
+        expect(res.body.data.caption).to.equal(media.caption);
+        expect(res.body.data.type).to.equal(media.type);
+        expect(res.body.data.link).to.equal(media.link);
+        expect(res.body.data.comments).to.equal(2);
+        expect(res.body.data._user.fullname).to.equal(user.fullname);
+        expect(res.body.data._user.username).to.equal(user.username);
+        done();
+      })
+      .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
   it('should not delete comment - Access Denied', (done) => {
     request(app)
       .delete(`/api/v1/media/${media._id}/comments/${comment._id}`)
@@ -230,12 +268,28 @@ describe('## Media API', () => {
       .set('authorization', `Bearer ${token}`)
       .expect(httpStatus.OK)
       .then(res => {
-        console.log(res.body);
         expect(res.body.code).to.equal(codes.COMMENT_DELETED);
         expect(res.body.status).to.equal('success');
         done();
       })
       .catch(err => {
+        console.error('ERROR : ', err.response.text);
+      });
+  });
+
+  it('media should have one comment', (done) => {
+    request(app)
+      .get(`/api/v1/media/${media._id}/comments`)
+      .set('authorization', `Bearer ${token}`)
+      .expect(httpStatus.OK)
+      .then(res => {
+        expect(res.body.code).to.equal(codes.COMMENTS_FOUND);
+        expect(res.body.status).to.equal('success');
+        expect(res.body.data).to.have.lengthOf(1);
+        done();
+      })
+      .catch(err => {
+        console.log(err);
         console.error('ERROR : ', err.response.text);
       });
   });
@@ -277,6 +331,7 @@ describe('## Media API', () => {
         console.error('ERROR : ', err.response.text);
       });
   });
+
 
   after(() => user.removeAsync());
 });

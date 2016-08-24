@@ -65,8 +65,7 @@ function create(req, res, next) {
         data: savedComment
       });
     })
-    .catch(e => {
-      console.log(e);
+    .catch(() => {
       next(new APIError(
         codes.CREATE_COMMENT_FAIL,
         res.__('Create Comment Fail'),

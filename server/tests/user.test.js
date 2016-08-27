@@ -206,11 +206,11 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# PUT /api/v1/users/:id', () => {
+  describe('# PUT /api/v1/users/self', () => {
     it('should update user details', (done) => {
       user.username = 'KK';
       request(app)
-        .put(`/api/v1/users/${user._id}`)
+        .put(`/api/v1/users/self`)
         .set('authorization', `Bearer ${user.auth}`)
         .send(user)
         .expect(httpStatus.OK)
@@ -247,10 +247,10 @@ describe('## User APIs', () => {
     });
   });
 
-  describe('# DELETE /api/v1/users/', () => {
+  describe('# DELETE /api/v1/users/self', () => {
     it('should delete user', (done) => {
       request(app)
-        .delete(`/api/v1/users/${user._id}`)
+        .delete(`/api/v1/users/self`)
         .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {

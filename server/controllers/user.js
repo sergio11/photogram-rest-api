@@ -80,6 +80,21 @@ function create(req, res, next) {
   }).catch(e => next(e));
 }
 
+/**
+ * Load self user.
+ */
+function self(req, res, next) {
+  User.get(req.auth).then(user => {
+    res.json({
+      code: codes.USER_FOUND,
+      status: 'success',
+      data: user
+    });
+  }).catch(e => {
+    console.log(e);
+    next(new APIError(codes.USER_NOT_FOUND, res.__('User not found'), httpStatus.NOT_FOUND, true));
+  });
+}
 
 /**
  * Load user and append to req.
@@ -99,7 +114,7 @@ function load(req, res, next, id) {
  * @returns {User}
  */
 function get(req, res) {
-  return res.json({
+  res.json({
     code: codes.USER_FOUND,
     status: 'success',
     data: req.user
@@ -107,43 +122,38 @@ function get(req, res) {
 }
 
 /**
- * Update existing user
+ * Update self
  * @property {string} req.body.fullname - The user's fullname
  * @property {string} req.body.username - The username of user.
- * @property {string} req.body.password - The user's password.
  * @property {url} req.body.website - The user's website.
  * @property {biography} req.body.biography - The user's biography
  * @property {email} req.body.email - The user's email
  * @property {mobileNumber} req.body.mobileNumber - The user's mobileNumber
- * @property {createdAt} req.body.createdAt - The user's createdAt
  * @returns {User}
  */
 function update(req, res, next) {
-  const user = req.user;
-  user.fullname = req.body.fullname;
-  user.username = req.body.username;
-  user.password = req.body.password;
-  user.website = req.body.website;
-  user.biography = req.body.biography;
-  user.email = req.body.email;
-  user.mobileNumber = req.body.mobileNumber;
-  user.createdAt = req.body.createdAt;
-
-  user.saveAsync()
-    .then((savedUser) => res.json({
-      code: codes.UPDATE_USER_SUCCESS,
-      status: 'success',
-      data: savedUser
-    }))
-    .catch(e => {
-      next(new APIError(
-        codes.UPDATE_USER_FAIL,
-        res.__('User update failed'),
-        httpStatus.INTERNAL_SERVER_ERROR,
-        true
-      ));
-      console.log(e);
-    });
+  User.get(req.auth).then(user => {
+    user.set('fullname', req.body.fullname);
+    user.set('username', req.body.username);
+    user.set('website', req.body.website);
+    user.set('biography', req.body.biography);
+    user.set('email', req.body.email);
+    user.set('mobileNumber', req.body.mobileNumber);
+    return user.saveAsync();
+  }).then(savedUser => res.json({
+    code: codes.UPDATE_USER_SUCCESS,
+    status: 'success',
+    data: savedUser
+  }))
+  .catch(e => {
+    next(new APIError(
+      codes.UPDATE_USER_FAIL,
+      res.__('User update failed'),
+      httpStatus.INTERNAL_SERVER_ERROR,
+      true
+    ));
+    console.log(e);
+  });
 }
 
 /**
@@ -159,18 +169,17 @@ function list(req, res, next) {
 }
 
 /**
- * Delete user.
+ * Delete self.
  * @returns {User}
  */
 function remove(req, res, next) {
-  const user = req.user;
-  user.removeAsync()
-    .then((deletedUser) => res.json({
-      code: codes.USER_DELETED,
-      status: 'success',
-      data: deletedUser
-    }))
-    .catch((e) => next(e));
+  User.get(req.auth).then(user => user.removeAsync())
+  .then(deletedUser => res.json({
+    code: codes.USER_DELETED,
+    status: 'success',
+    data: deletedUser
+  }))
+  .catch(e => next(e));
 }
 
-export default { load, get, create, update, list, remove, login };
+export default { self, load, get, create, update, list, remove, login };

@@ -2,6 +2,7 @@ import express from 'express';
 import userRoutes from './user';
 import accountRoutes from './account';
 import mediaRoutes from './media';
+import tagsRoutes from './tags';
 
 const router = express.Router();	// eslint-disable-line new-cap
 
@@ -23,6 +24,9 @@ router.use('/accounts', accountRoutes);
 
 // mount media routes at /media
 router.use('/media', mediaRoutes);
+
+// mount tag routes at /tags
+router.use('/tags', tagsRoutes);
 
 
 export default router;

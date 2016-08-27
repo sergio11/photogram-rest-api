@@ -11,5 +11,8 @@
   "No such comments for media!": "No se han encontrado comentarios",
   "Create Comment Fail": "Error al crear comentario",
   "Comment not found": "Comentario no encontrado",
-  "Delete Comment Failed": "Error al borrar el comentario"
+  "Delete Comment Failed": "Error al borrar el comentario",
+  "Term not found": "Término no encontrado",
+  "No Term was found": "Ningún término fue encontrado",
+  "No recently tagged media": "Sin medios etiquetados recientemente"
 }

@@ -12,5 +12,8 @@
 	"No such comments for media!": "No such comments for media!",
 	"Create Comment Fail": "Create Comment Fail",
 	"Comment not found": "Comment not found",
-	"Delete Comment Failed": "Delete Comment Failed"
+	"Delete Comment Failed": "Delete Comment Failed",
+	"Term not found": "Term not found",
+	"No Term was found": "No Term was found",
+	"No recently tagged media": "No recently tagged media"
 }

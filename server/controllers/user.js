@@ -84,13 +84,24 @@ function create(req, res, next) {
  * Load self user.
  */
 function self(req, res, next) {
-  User.get(req.auth).then(user => {
-    res.json({
-      code: codes.USER_FOUND,
-      status: 'success',
-      data: user
-    });
-  }).catch(e => {
+  User.get(req.auth)
+  .then(user => res.json({
+    code: codes.USER_FOUND,
+    status: 'success',
+    data: {
+      id: user._id,
+      username: user.username,
+      fullname: user.fullname,
+      bio: user.biography,
+      website: user.website,
+      counts: {
+        media: user._media.length,
+        follows: user._follows.length,
+        followed_by: user._followedBy.length
+      }
+    }
+  }))
+  .catch(e => {
     console.log(e);
     next(new APIError(codes.USER_NOT_FOUND, res.__('User not found'), httpStatus.NOT_FOUND, true));
   });
@@ -116,7 +127,18 @@ function get(req, res) {
   res.json({
     code: codes.USER_FOUND,
     status: 'success',
-    data: req.user
+    data: {
+      id: req.user._id,
+      username: req.user.username,
+      fullname: req.user.fullname,
+      bio: req.user.biography,
+      website: req.user.website,
+      counts: {
+        media: req.user._media.length,
+        follows: req.user._follows.length,
+        followed_by: req.user._followedBy.length
+      }
+    }
   });
 }
 

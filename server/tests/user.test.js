@@ -151,21 +151,48 @@ describe('## User APIs', () => {
   });
 
 
-  describe('# GET /api/v1/users/:id', () => {
-    it('should get user details', (done) => {
+  describe('# GET /api/v1/users/self', () => {
+    it('should get self details', (done) => {
       request(app)
-        .get(`/api/v1/users/${user._id}`)
+        .get(`/api/v1/users/self`)
         .set('authorization', `Bearer ${user.auth}`)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.code).to.equal(codes.USER_FOUND);
           expect(res.body.status).to.equal('success');
-          expect(res.body.data.fullname).to.equal(user.fullname);
+          expect(res.body.data.id).to.equal(user._id.toString());
           expect(res.body.data.username).to.equal(user.username);
+          expect(res.body.data.fullname).to.equal(user.fullname);
+          expect(res.body.data.bio).to.equal(user.biography);
           expect(res.body.data.website).to.equal(user.website);
-          expect(res.body.data.biography).to.equal(user.biography);
-          expect(res.body.data.email).to.equal(user.email);
-          expect(res.body.data.mobileNumber).to.equal(user.mobileNumber);
+          expect(res.body.data.counts.media).to.equal(0);
+          expect(res.body.data.counts.follows).to.equal(0);
+          expect(res.body.data.counts.followed_by).to.equal(0);
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+  });
+
+  describe('# GET /api/v1/users/:id', () => {
+    it('should get user details', (done) => {
+      request(app)
+        .get(`/api/v1/users/${anotherUser._id}`)
+        .set('authorization', `Bearer ${user.auth}`)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.USER_FOUND);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data.id).to.equal(anotherUser._id.toString());
+          expect(res.body.data.username).to.equal(anotherUser.username);
+          expect(res.body.data.fullname).to.equal(anotherUser.fullname);
+          expect(res.body.data.bio).to.equal(anotherUser.biography);
+          expect(res.body.data.website).to.equal(anotherUser.website);
+          expect(res.body.data.counts.media).to.equal(0);
+          expect(res.body.data.counts.follows).to.equal(0);
+          expect(res.body.data.counts.followed_by).to.equal(0);
           done();
         })
         .catch(err => {

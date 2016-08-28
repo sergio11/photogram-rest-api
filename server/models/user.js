@@ -46,6 +46,10 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  _media: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Media'
+  }],
   _follows: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

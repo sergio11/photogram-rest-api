@@ -11,11 +11,10 @@ chai.config.includeStack = true;
 let token = null;
 const anotherToken = 'eyJhbGciOiJIUzI1NiJ9.bWFyY29z.WteCILBidoG7nF-ETMX1IJEVDX_TisASHanbb5Ra_K8';
 const media = {
-  type: 'IMAGE',
+  type: 'image',
   caption: 'Imagen de prueba',
   link: 'https://www.mediastorage.com/fhjakhfjah4324234jhjkfsdf',
-  location: [-5.671007, 40.965470],
-  user: '123456'
+  location: [-5.671007, 40.965470]
 };
 const comment = {
   text: 'Hola esto es un comentario de prueba ......',
@@ -59,23 +58,6 @@ describe('## Media API', () => {
       });
   });
 
-  it('should not create media - invalid user id', (done) => {
-    request(app)
-      .post('/api/v1/media')
-      .set('authorization', `Bearer ${token}`)
-      .send(media)
-      .expect(httpStatus.BAD_REQUEST)
-      .then(res => {
-        expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
-        expect(res.body.status).to.equal('error');
-        media.user = user._id;
-        media.type = 'image';
-        done();
-      })
-      .catch(err => {
-        console.error('ERROR : ', err.response.text);
-      });
-  });
 
   it('should not create media - type must be one of [IMAGE, VIDEO]', (done) => {
     request(app)

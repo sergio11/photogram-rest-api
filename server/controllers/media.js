@@ -95,7 +95,7 @@ function create(req, res, next) {
     caption: req.body.caption,
     link: req.body.link,
     location: req.body.location,
-    _user: req.body.user
+    _user: req.auth
   });
   media.saveAsync()
     .then(savedMedia => {

@@ -19,8 +19,7 @@ export default {
       type: Joi.string().required().valid(['IMAGE', 'VIDEO']),
       caption: Joi.string().optional().min(6),
       link: Joi.string().required(),
-      location: Joi.array().length(2).items(Joi.number().precision(8)),
-      user: Joi.objectId().required()
+      location: Joi.array().length(2).items(Joi.number().precision(8))
     }
   }
 };

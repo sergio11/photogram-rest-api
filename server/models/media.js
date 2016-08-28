@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Comment from './comment';
+import User from './user';
 
 const MediaSchema = new mongoose.Schema({
   type: {
@@ -40,6 +41,11 @@ const MediaSchema = new mongoose.Schema({
 MediaSchema.pre('remove', function (next) {
   Comment.remove({ _media: this._id }).exec();
   next();
+});
+
+MediaSchema.post('save', media => {
+  console.log('%s has been saved', media._id);
+  User.update({ _id: media._user }, { $push: { _media: media._id } }).exec();
 });
 
 /**

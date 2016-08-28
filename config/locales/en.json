@@ -15,5 +15,7 @@
 	"Delete Comment Failed": "Delete Comment Failed",
 	"Term not found": "Term not found",
 	"No Term was found": "No Term was found",
-	"No recently tagged media": "No recently tagged media"
+	"No recently tagged media": "No recently tagged media",
+	"You can not follow yourself": "You can not follow yourself",
+	"You can not unfollow yourself": "You can not unfollow yourself"
 }

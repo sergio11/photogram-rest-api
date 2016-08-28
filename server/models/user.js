@@ -4,9 +4,10 @@ import bcrypt from 'bcrypt';
 
 // promisify bcrypt
 Promise.promisifyAll(bcrypt);
-const SALT_WORK_FACTOR = 10;
 require('mongoose-type-url');
 require('mongoose-type-email');
+
+const SALT_WORK_FACTOR = 10;
 /**
  * User Schema
  */
@@ -44,7 +45,15 @@ const UserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  _follows: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  _followedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 });
 
 
@@ -88,7 +97,8 @@ UserSchema.statics = {
    */
   get(id) {
     return this.findById(id)
-      .execAsync().then((user) => {
+      .execAsync()
+      .then(user => {
         if (!user) {
           return Promise.reject(new Error('No such user exists!'));
         }
@@ -108,6 +118,62 @@ UserSchema.statics = {
       .skip(skip)
       .limit(limit)
       .execAsync();
+  },
+  /**
+   * Get user follows
+   * @param {ObjectId} id - The objectId of user.
+   * @returns {Promise<[User], APIError>}
+   */
+  follows(id) {
+    return this.findById(id)
+      .populate('_follows')
+      .execAsync()
+      .then(user => {
+        if (!user) {
+          return Promise.reject(new Error('No such user exists!'));
+        }
+        return user._follows;
+      });
+  },
+  /**
+   * Get user followed by
+   * @param {ObjectId} id - The objectId of user.
+   * @returns {Promise<[User], APIError>}
+   */
+  followedBy(id) {
+    return this.findById(id)
+      .populate('_followedBy')
+      .execAsync()
+      .then(user => {
+        if (!user) {
+          return Promise.reject(new Error('No such user exists!'));
+        }
+        return user._followedBy;
+      });
+  },
+  /**
+   * add follower to user followed
+   * @param {ObjectId} follower - The objectId of follower.
+   * @param {ObjectId} followed - The objectId of followed.
+   * @returns {Promise<[User], APIError>}
+   */
+  addFollower(follower, followed) {
+    return Promise.all([
+      this.findById(follower).update({ $push: { _follows: followed } }).execAsync(),
+      this.findById(followed).update({ $push: { _follows: followed } }).execAsync()
+    ]).then(() => ({ follower, followed }));
+  },
+  /**
+   * remove follower to user followed
+   * @param {ObjectId} follower - The objectId of follower.
+   * @param {ObjectId} followed - The objectId of followed.
+   * @returns {Promise<[User], APIError>}
+   */
+  removeFollower(follower, followed) {
+    return Promise.all([
+      this.findById(follower).update({ $pull: { _follows: followed } }).execAsync(),
+      this.findById(followed).update({ $pull: { _follows: followed } }).execAsync()
+    ]).then(() => ({ follower, followed }));
   }
 };
 /**

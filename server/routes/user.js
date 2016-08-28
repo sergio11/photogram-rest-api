@@ -29,6 +29,21 @@ router.route('/self')
   .delete(validate(paramValidation.deleteUser), userCtrl.remove);
 
 /**
+* @api {get} /api/v1/users/self/follows Get the list of users this user follows.
+* @apiVersion 0.0.1
+* @apiName GetUserFollows
+* @apiGroup Users
+*/
+router.get('/self/follows', userCtrl.follows);
+/**
+* @api {get} /api/v1/users/self/followed-by Get the list of users this user is followed by.
+* @apiVersion 0.0.1
+* @apiName GetUserFollowedBy
+* @apiGroup Users
+*/
+router.get('/self/followed-by', userCtrl.followedBy);
+
+/**
 * @api {get} /api/v1/users Get list of users.
 * @apiVersion 1.0.0
 * @apiName GetUsers
@@ -42,9 +57,21 @@ router.get('/', userCtrl.list);
 * @apiName GetUserDetail
 * @apiGroup Users
 */
-router.get('/:id', validate(paramValidation.get), userCtrl.get);
-
-
+router.get('/:id', userCtrl.get);
+/**
+* @api {put} /api/v1/users/:userId/follow Follow user.
+* @apiVersion 0.0.1
+* @apiName FollowUser
+* @apiGroup Users
+*/
+router.put('/:id/follow', userCtrl.follow);
+/**
+* @api {put} /api/v1/users/:userId/unfollow unfollow user.
+* @apiVersion 0.0.1
+* @apiName UnFollowUser
+* @apiGroup Users
+*/
+router.put('/:id/unfollow', userCtrl.unfollow);
 /** Load user when API with userId route parameter is hit */
 router.param('id', userCtrl.load);
 

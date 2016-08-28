@@ -14,5 +14,7 @@
   "Delete Comment Failed": "Error al borrar el comentario",
   "Term not found": "Término no encontrado",
   "No Term was found": "Ningún término fue encontrado",
-  "No recently tagged media": "Sin medios etiquetados recientemente"
+  "No recently tagged media": "Sin medios etiquetados recientemente",
+  "You can not follow yourself": "No puedes seguirte a ti mismo.",
+  "You can not unfollow yourself": "You can not unfollow yourself"
 }

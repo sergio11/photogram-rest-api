@@ -2,12 +2,6 @@ import Joi from 'joi';
 Joi.objectId = require('joi-objectid')(Joi);
 
 export default {
-  // GET /api/users/:id
-  get: {
-    params: {
-      id: Joi.objectId()
-    }
-  },
   // UPDATE /api/users/:id
   updateUser: {
     body: {

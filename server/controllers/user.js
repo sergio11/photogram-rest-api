@@ -103,8 +103,7 @@ function load(req, res, next, id) {
   User.get(id).then((user) => {
     req.user = user;		// eslint-disable-line no-param-reassign
     return next();
-  }).catch(e => {
-    console.log(e);
+  }).catch(() => {
     next(new APIError(codes.USER_NOT_FOUND, res.__('User not found'), httpStatus.NOT_FOUND, true));
   });
 }
@@ -164,8 +163,12 @@ function update(req, res, next) {
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  User.list({ limit, skip }).then((users) =>	res.json(users))
-    .error((e) => next(e));
+  User.list({ limit, skip }).then(users =>	res.json({
+    code: codes.USER_LIST,
+    status: 'success',
+    data: users
+  }))
+  .catch(e => next(e));
 }
 
 /**
@@ -182,4 +185,96 @@ function remove(req, res, next) {
   .catch(e => next(e));
 }
 
-export default { self, load, get, create, update, list, remove, login };
+/**
+* Get the list of users this user follows
+* @returns {[User]}
+*/
+function follows(req, res, next) {
+  User.follows(req.auth).then(userFollows => {
+    res.json({
+      code: codes.USER_FOLLOWS,
+      status: 'success',
+      data: userFollows
+    });
+  }).catch(e => next(e));
+}
+
+/**
+* Get the list of users this user is followed by.
+* @returns {[User]}
+*/
+function followedBy(req, res, next) {
+  User.followedBy(req.auth).then(usersfollowedBy => {
+    res.json({
+      code: codes.USER_FOLLOWED_BY,
+      status: 'success',
+      data: usersfollowedBy
+    });
+  }).catch(e => next(e));
+}
+
+/**
+* Follow user
+* @returns {Object}
+*/
+function follow(req, res, next) {
+  if (req.user._id.toString() !== req.auth) {
+    User.addFollower(req.auth, req.user._id)
+    .then(result => res.json({
+      code: codes.FOLLOWING_THE_USER,
+      status: 'success',
+      data: result
+    }))
+    .catch(e => {
+      console.log(e);
+      next(e);
+    });
+  } else {
+    next(new APIError(
+      codes.CAN_NOT_FOLLOW,
+      res.__('You can not follow yourself'),
+      httpStatus.BAD_REQUEST,
+      true
+    ));
+  }
+}
+/**
+* UnFollow user
+* @returns {Object}
+*/
+function unfollow(req, res, next) {
+  if (req.user._id.toString() !== req.auth) {
+    User.removeFollower(req.auth, req.user._id)
+    .then(result => res.json({
+      code: codes.UNFOLLOWING_THE_USER,
+      status: 'success',
+      data: result
+    }))
+    .catch(e => {
+      console.log(e);
+      next(e);
+    });
+  } else {
+    next(new APIError(
+      codes.CAN_NOT_UNFOLLOW,
+      res.__('You can not unfollow yourself'),
+      httpStatus.BAD_REQUEST,
+      true
+    ));
+  }
+}
+
+export default {
+  self,
+  load,
+  get,
+  create,
+  update,
+  list,
+  remove,
+  login,
+  follows,
+  followedBy,
+  follow,
+  unfollow
+};

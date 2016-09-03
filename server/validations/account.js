@@ -9,6 +9,13 @@ export default {
       password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/)
     }
   },
+  // POST /accounts/signin/facebook
+  facebook: {
+    body: {
+      id: Joi.number().required(),
+      token: Joi.string().required()
+    }
+  },
   // POST /accounts/signup
   signup: {
     body: {
@@ -16,8 +23,8 @@ export default {
       username: Joi.string().required(),
       password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/),
       biography: Joi.string().optional(),
-      email: Joi.string().email(),
-      mobileNumber: Joi.string().regex(/^[1-9]{9}$/).required()
+      email: Joi.string().email().required(),
+      mobileNumber: Joi.string().regex(/^[1-9]{9}$/).optional()
     }
   }
 };

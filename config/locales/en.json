@@ -17,5 +17,7 @@
 	"No Term was found": "No Term was found",
 	"No recently tagged media": "No recently tagged media",
 	"You can not follow yourself": "You can not follow yourself",
-	"You can not unfollow yourself": "You can not unfollow yourself"
+	"You can not unfollow yourself": "You can not unfollow yourself",
+	"Failure to sign in with facebook.": "Failure to sign in with facebook.",
+	"Failed create user": "Failed create user"
 }

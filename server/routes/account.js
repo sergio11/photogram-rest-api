@@ -32,6 +32,31 @@ const router = express.Router();	// eslint-disable-line new-cap
 router.post('/signin', validate(paramValidation.signin), userCtrl.login);
 
 /**
+* @api {post} /api/v1/accounts/signin/facebook login facebook
+* @apiVersion 1.0.0
+* @apiName signinFacebook
+* @apiGroup Accounts
+* @apiParam {String} token facebook access token.
+* @apiSuccess {String} tokenApplication Access Token.
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*     {
+*       "code": "1001",
+*       "status": "success",
+*       "token": eyJhbGciOiJIUzI1NiJ9.U2VyZ2lvMTE.X8xCcmI0yqAGxIULFgSZv1_2JsxHR-Y9Ka5qzY1HJMU
+*     }
+* @apiError LOGIN_FAIL_WITH_FACEBOOK Failure to sign in with facebook.
+* @apiErrorExample Error-Response:
+*     HTTP/1.1 404 Not Found
+*     {
+*       "code": "1007",
+*       "status": "error",
+*       "message": "Failure to sign in with facebook"
+*     }
+*/
+router.post('/signin/facebook', validate(paramValidation.facebook), userCtrl.facebook);
+
+/**
 * @api {post} /api/v1/accounts/sigup signup user
 * @apiVersion 1.0.0
 * @apiName signup

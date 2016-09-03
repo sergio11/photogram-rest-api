@@ -1,9 +1,14 @@
+import Promise from 'bluebird';
 import User from '../models/user';
 import { sign } from 'jsonwebtoken';
 import { secret } from '../../config/env';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import * as codes from '../codes/';
+import graph from 'fbgraph';
+
+// promisify graph
+Promise.promisifyAll(graph);
 
 /**
  * Login User
@@ -37,6 +42,50 @@ function login(req, res, next) {
       data: token
     });
   }).catch(e => next(e));
+}
+
+
+/**
+* Login User with facebook
+* @returns {User}
+*/
+
+function facebook(req, res, next) {
+  const fbToken = req.body.token;
+  graph.setVersion('2.7');
+  graph.setAccessToken(fbToken);
+  graph.getAsync(`/${req.body.id}`)
+  .then(data => User.findOne({ fbID: data.id }).then(userSaved => {
+    let user = userSaved;
+    if (user) {
+      user.set('fbToken', fbToken);
+    } else {
+      user = new User({
+        fullname: data.name,
+        username: data.name,
+        email: data.email || 'sosos@usal.es',
+        fbID: data.id,
+        fbToken
+      });
+    }
+    return user.saveAsync();
+  })
+  .then(user => sign(user.id, secret))
+  .then(token => {
+    res.json({
+      code: codes.LOGIN_SUCCESS_WITH_FACEBOOK,
+      status: 'success',
+      data: token
+    });
+  }).catch(err => {
+    console.log(err);
+    next(new APIError(
+      codes.LOGIN_FAIL_WITH_FACEBOOK,
+      res.__('Failure to sign in with facebook.'),
+      httpStatus.INTERNAL_SERVER_ERROR,
+      true
+    ));
+  }));
 }
 
 /**
@@ -101,8 +150,7 @@ function self(req, res, next) {
       }
     }
   }))
-  .catch(e => {
-    console.log(e);
+  .catch(() => {
     next(new APIError(codes.USER_NOT_FOUND, res.__('User not found'), httpStatus.NOT_FOUND, true));
   });
 }
@@ -298,5 +346,6 @@ export default {
   follows,
   followedBy,
   follow,
-  unfollow
+  unfollow,
+  facebook
 };

@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: false
   },
   website: {
     type: mongoose.SchemaTypes.Url,
@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    required: true,
+    required: false,
     match: [/^[1-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
   },
   createdAt: {
@@ -57,7 +57,17 @@ const UserSchema = new mongoose.Schema({
   _followedBy: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }]
+  }],
+  fbID: {
+    type: Number,
+    required: false,
+    unique: true,
+    sparse: true
+  },
+  fbToken: {
+    type: String,
+    required: false
+  }
 });
 
 
@@ -83,6 +93,7 @@ UserSchema.pre('save', function (next) {
       next(err);
     });
 });
+
 
 /**
  * Methods

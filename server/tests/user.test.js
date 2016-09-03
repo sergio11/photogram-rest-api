@@ -5,7 +5,7 @@ import chai from 'chai';
 import { expect } from 'chai';
 import app from '../app';
 import * as codes from '../codes/';
-import { secret } from '../../config/env';
+import { secret, fbToken, fbID } from '../../config/env';
 import { sign } from 'jsonwebtoken';
 
 chai.config.includeStack = false;
@@ -27,6 +27,7 @@ const anotherUser = new User({
   email: 'al88atomic@gmail.com',
   mobileNumber: '673445695'
 });
+
 
 describe('## User APIs', () => {
   before(() => anotherUser.saveAsync().then(savedUser => {
@@ -73,7 +74,7 @@ describe('## User APIs', () => {
         });
     });
 
-    it('should handle express validation error - name and fullname required', (done) => {
+    it('should handle express validation error - name, fullname, email is required', (done) => {
       request(app)
         .post('/api/v1/accounts/signup')
         .send({
@@ -84,7 +85,7 @@ describe('## User APIs', () => {
           expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
           expect(res.body.message)
             .to
-            .equal('"fullname" is required and "username" is required');
+            .equal('"fullname" is required and "username" is required and "email" is required');
           done();
         });
     });
@@ -150,6 +151,26 @@ describe('## User APIs', () => {
     });
   });
 
+  describe('# POST /api/v1/accounts/signin/facebook', () => {
+    it('should authenticate the user with facebook', (done) => {
+      request(app)
+        .post('/api/v1/accounts/signin/facebook')
+        .send({
+          id: fbID,
+          token: fbToken
+        })
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.LOGIN_SUCCESS_WITH_FACEBOOK);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data).to.have.lengthOf(97);
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+  });
 
   describe('# GET /api/v1/users/self', () => {
     it('should get self details', (done) => {
@@ -386,7 +407,7 @@ describe('## User APIs', () => {
           expect(res.body.code).to.equal(codes.USER_LIST);
           expect(res.body.status).to.equal('success');
           expect(res.body.data).to.be.an('array');
-          expect(res.body.data).to.have.lengthOf(2);
+          expect(res.body.data).to.have.lengthOf(3);
           done();
         })
         .catch(err => {

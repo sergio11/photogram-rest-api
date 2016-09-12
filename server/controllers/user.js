@@ -124,7 +124,10 @@ function create(req, res, next) {
     res.json({
       code: codes.CREATE_USER_SUCCESS,
       status: 'success',
-      data: savedUser
+      data: {
+        id: savedUser._id,
+        message: res.__('User successfully registered, check your email for more information')
+      }
     });
   }).catch(e => next(e));
 }

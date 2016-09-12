@@ -44,13 +44,11 @@ describe('## User APIs', () => {
         .then(res => {
           expect(res.body.code).to.equal(codes.CREATE_USER_SUCCESS);
           expect(res.body.status).to.equal('success');
-          expect(res.body.data.fullname).to.equal(user.fullname);
-          expect(res.body.data.username).to.equal(user.username);
-          expect(res.body.data.website).to.equal(user.website);
-          expect(res.body.data.biography).to.equal(user.biography);
-          expect(res.body.data.email).to.equal(user.email);
-          expect(res.body.data.mobileNumber).to.equal(user.mobileNumber);
-          user._id = res.body.data._id;
+          expect(res.body.data.id).to.have.lengthOf(24);
+          expect(res.body.data.message)
+            .to
+            .equal('User successfully registered, check your email for more information');
+          user._id = res.body.data.id;
           done();
         })
         .catch(err => {
@@ -146,7 +144,7 @@ describe('## User APIs', () => {
           user.auth = token;
           done();
         }).catch(err => {
-          console.error('ERROR : ', err.response.text);
+          console.error('ERROR : ', err);
         });
     });
   });
@@ -441,9 +439,3 @@ describe('## User APIs', () => {
 
   after(() => anotherUser.removeAsync());
 });
-
-/*
-
-const comparison = bcrypt.compareSync(user.password, res.body.password);
-expect(comparison).to.equal(true);
-*/

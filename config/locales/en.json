@@ -19,5 +19,6 @@
 	"You can not follow yourself": "You can not follow yourself",
 	"You can not unfollow yourself": "You can not unfollow yourself",
 	"Failure to sign in with facebook.": "Failure to sign in with facebook.",
-	"Failed create user": "Failed create user"
+	"Failed create user": "Failed create user",
+	"User successfully registered, check your email for more information": "User successfully registered, check your email for more information"
 }

@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import randtoken from 'rand-token';
 
 // promisify bcrypt
 Promise.promisifyAll(bcrypt);
@@ -67,6 +68,16 @@ const UserSchema = new mongoose.Schema({
   fbToken: {
     type: String,
     required: false
+  },
+  active: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  // Random string sent to the user email address in order to verify it
+  confirmationToken: {
+    type: String,
+    required: false
   }
 });
 
@@ -92,6 +103,12 @@ UserSchema.pre('save', function (next) {
     .catch(err => {
       next(err);
     });
+});
+
+UserSchema.pre('save', function (next) {
+  const user = this;
+  user.confirmationToken = randtoken.generate(16);
+  next();
 });
 
 

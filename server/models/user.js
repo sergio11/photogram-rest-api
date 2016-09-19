@@ -2,6 +2,7 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import randtoken from 'rand-token';
+import { env, activateToken } from '../../config/env';
 
 // promisify bcrypt
 Promise.promisifyAll(bcrypt);
@@ -77,7 +78,9 @@ const UserSchema = new mongoose.Schema({
   // Random string sent to the user email address in order to verify it
   confirmationToken: {
     type: String,
-    required: false
+    required: false,
+    unique: true,
+    sparse: true
   }
 });
 
@@ -107,7 +110,13 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.pre('save', function (next) {
   const user = this;
-  user.confirmationToken = randtoken.generate(16);
+  if (user.active === 0) {
+    if (env === 'test') {
+      user.confirmationToken = activateToken;
+    } else {
+      user.confirmationToken = randtoken.generate(16);
+    }
+  }
   next();
 });
 

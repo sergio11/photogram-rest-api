@@ -5,7 +5,7 @@ import chai from 'chai';
 import { expect } from 'chai';
 import app from '../app';
 import * as codes from '../codes/';
-import { secret, fbToken, fbID } from '../../config/env';
+import { secret, fbToken, fbID, activateToken } from '../../config/env';
 import { sign } from 'jsonwebtoken';
 
 chai.config.includeStack = false;
@@ -25,7 +25,8 @@ const anotherUser = new User({
   password: '1234fuego',
   biography: 'Álvaro ia a ....',
   email: 'al88atomic@gmail.com',
-  mobileNumber: '673445695'
+  mobileNumber: '673445695',
+  active: 1
 });
 
 
@@ -102,6 +103,55 @@ describe('## User APIs', () => {
           expect(res.body.code).to.equal(codes.LOGIN_FAIL);
           expect(res.body.status).to.equal('error');
           expect(res.body.message).to.equal('Username or password invalid.');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should not authenticate the user - The account is disabled', (done) => {
+      request(app)
+        .post('/api/v1/accounts/signin')
+        .send({
+          username: 'Sergio11',
+          password: 'sergio11Bisite'
+        })
+        .expect(httpStatus.FORBIDDEN)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.ACCOUNT_DISABLED);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('The account is disabled');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should not activate account - token length must be 16 characters long', (done) => {
+      request(app)
+        .get(`/api/v1/accounts/confirm/0123456789abcdefghijklmnopqrstuvw`)
+        .expect(httpStatus.BAD_REQUEST)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('"token" length must be 16 characters long');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should activate account', (done) => {
+      request(app)
+        .get(`/api/v1/accounts/confirm/${activateToken}`)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.ACCOUNT_ACTIVATED);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data).to.equal('The account was successfully activated');
           done();
         })
         .catch(err => {

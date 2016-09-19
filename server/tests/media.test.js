@@ -28,7 +28,8 @@ describe('## Media API', () => {
     password: 'sergio11Bisite',
     biography: 'Sergio es DIOS',
     email: 'sss4esob@gmail.com',
-    mobileNumber: '673445695'
+    mobileNumber: '673445695',
+    active: 1
   });
 
   before(() => user.saveAsync().then(savedUser =>

@@ -24,6 +24,15 @@ function login(req, res, next) {
         true
        );
     }
+    if (user.active === 0) {
+      throw new APIError(
+        codes.ACCOUNT_DISABLED,
+        res.__('The account is disabled'),
+        httpStatus.FORBIDDEN,
+        true
+      );
+    }
+
     return user.comparePassword(user.password, req.body.password).then(isMatch => {
       if (!isMatch) {
         throw new APIError(
@@ -65,7 +74,8 @@ function facebook(req, res, next) {
         username: data.name,
         email: data.email || 'sosos@usal.es',
         fbID: data.id,
-        fbToken
+        fbToken,
+        active: 1
       });
     }
     return user.saveAsync();
@@ -337,6 +347,31 @@ function unfollow(req, res, next) {
   }
 }
 
+/**
+* Confirm User Accounts
+*
+*/
+function confirm(req, res, next) {
+  User.findOneAndUpdate({ confirmationToken: req.params.token }, { active: 1 })
+  .then(user => {
+    if (!user) {
+      throw new APIError(
+        codes.INVALID_CONFIRMATION_TOKEN,
+        res.__('Invalid confirmation token'),
+        httpStatus.INTERNAL_SERVER_ERROR,
+        true
+      );
+    } else {
+      res.json({
+        code: codes.ACCOUNT_ACTIVATED,
+        status: 'success',
+        data: res.__('The account was successfully activated')
+      });
+    }
+  })
+  .catch(e => next(e));
+}
+
 export default {
   self,
   load,
@@ -350,5 +385,6 @@ export default {
   followedBy,
   follow,
   unfollow,
-  facebook
+  facebook,
+  confirm
 };

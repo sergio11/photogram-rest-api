@@ -69,13 +69,8 @@ router.post('/signin/facebook', validate(paramValidation.facebook), userCtrl.fac
 *       "code": "2000",
 *       "status": "success",
 *       "data": {
-*         "_id" : "57baccc875218f170f963d78",
-*         "fullname": "Sergio Sánchez Sánchez",
-*         "username": "Sergio11",
-*         "biography": "Sergio es DIOS",
-*         "email": "sss4esob@gmail.com",
-*         "mobileNumber": "673445695",
-*         "__v" : 0
+*         "id" : "57baccc875218f170f963d78",
+*          "message" : 'User successfully registered, check your email for more information'
 *       }
 *     }
 * @apiError USER_ALREDY_EXISTS User alredy exists.
@@ -88,5 +83,30 @@ router.post('/signin/facebook', validate(paramValidation.facebook), userCtrl.fac
 *     }
 */
 router.post('/signup', validate(paramValidation.signup), userCtrl.create);
+
+/**
+* @api {post} /api/v1/accounts/confirm/:token confirm user account
+* @apiVersion 0.0.1
+* @apiName confirm
+* @apiGroup Accounts
+* @apiParam {String} token a user confirmation token.
+* @apiSuccess {String} message a confirmation message.
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*     {
+*       "code": "3000",
+*       "status": "success",
+*       "data": 'The account was successfully activated'
+*     }
+* @apiError INVALID_CONFIRMATION_TOKEN invalid confirmation token.
+* @apiErrorExample Error-Response:
+*     HTTP/1.1 400 Bad Request
+*     {
+*       "code": "3005",
+*       "status": "error",
+*       "message": "Invalid confirmation token"
+*     }
+*/
+router.get('/confirm/:token', validate(paramValidation.confirm), userCtrl.confirm);
 
 export default router;

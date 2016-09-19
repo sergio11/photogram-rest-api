@@ -26,5 +26,11 @@ export default {
       email: Joi.string().email().required(),
       mobileNumber: Joi.string().regex(/^[1-9]{9}$/).optional()
     }
+  },
+  // GET /accounts/confirm/{token}
+  confirm: {
+    params: {
+      token: Joi.string().required().length(16)
+    }
   }
 };

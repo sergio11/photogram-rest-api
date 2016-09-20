@@ -23,5 +23,6 @@
 	"User successfully registered, check your email for more information": "User successfully registered, check your email for more information",
 	"The account is disabled": "The account is disabled",
 	"The account was successfully activated": "The account was successfully activated",
-	"Invalid confirmation token": "Invalid confirmation token"
+	"Invalid confirmation token": "Invalid confirmation token",
+	"Term created": "Term created"
 }

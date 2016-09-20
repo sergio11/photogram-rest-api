@@ -25,4 +25,6 @@ user.use(
   }
 );
 
+user.use('delete term', req => req.term._user._id.toString() === req.auth);
+
 export default user;

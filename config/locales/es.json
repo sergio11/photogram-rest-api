@@ -21,5 +21,6 @@
   "User successfully registered, check your email for more information": "Usuario registrado con éxito, revisa tu correo para obtener más información",
   "The account is disabled": "La cuenta está deshabilitada",
   "The account was successfully activated": "La cuenta fue activada con éxito",
-  "Invalid confirmation token": "Token de confirmación no válido"
+  "Invalid confirmation token": "Token de confirmación no válido",
+  "Term created": "Término creado"
 }

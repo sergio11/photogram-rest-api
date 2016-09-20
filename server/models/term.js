@@ -12,6 +12,10 @@ const TermSchema = new mongoose.Schema({
   },
   descripcion: {
     type: String
+  },
+  _user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 });
 

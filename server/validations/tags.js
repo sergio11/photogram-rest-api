@@ -15,5 +15,13 @@ export default {
       min_tag_id: Joi.objectId(),
       max_tag_id: Joi.objectId()
     }
+  },
+  // POST
+  create: {
+    body: {
+      name: Joi.string().required(),
+      slug: Joi.string().required(),
+      descripcion: Joi.string()
+    }
   }
 };

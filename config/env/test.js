@@ -5,8 +5,8 @@ export default {
   secret: 'RbBQqA6uF#msRF8s7h*?@=95HUm&DgMDd6zLFn4XzWQ6dtwXSJwBX#?gL2JWf!',
   length: 128,
   fbID: 105519999905242,
-  fbToken: 'EAAEaN5QLEAABAF79kJ1k8BXAhgcx4v09MmJhQAatE4ST7sToMe9EqkP1s7J09It'
-   + 'VWpmEMBZCSbdibWjARlgQDixgDCbhYu0I8BCltknf9wLyneE0T16p9ZB9ZBXPAxzlRqthQW'
-   + 'pwSmdRBoWorlIVC00jqen4oTQrHFip4z84gVmSR9sU6G8',
+  fbToken: 'EAAEaN5QLEAABAHE1fB2dFJfDc6U3wRmeqmWylrYeqZCbycncqTvqZBj03Q3KEM'
+    + 'aACcNANZAwApbtltxqz4dW6gZB3omcnsbNKrxcHQi5yIi7Hs0ZBMg5L3ayZC5xAayAaG'
+    + 'ETwWGfHPEMT7xwK0ybbAq2nEd9RgaF241RjZC0FKWhvZBGcXoZCNcme',
   activateToken: '0123456789abcfgt'
 };

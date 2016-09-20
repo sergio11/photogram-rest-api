@@ -27,6 +27,50 @@ function load(req, res, next, id) {
 }
 
 /**
+ * Create new tag
+ * @property {string} req.body.name - The term's name
+ * @property {string} req.body.slug - The term's slug
+ * @property {string} req.body.descripcion - The term's description
+ * @returns {integer} _id
+ */
+function create(req, res, next) {
+  const term = new Term({
+    name: req.body.name,
+    slug: req.body.slug,
+    descripcion: req.body.descripcion,
+    _user: req.auth
+  });
+
+  term.saveAsync().then(savedTerm => {
+    res.json({
+      code: codes.TERM_CREATED,
+      status: 'success',
+      data: {
+        id: savedTerm._id,
+        message: res.__('Term created')
+      }
+    });
+  }).catch(e => next(e));
+}
+
+/**
+* Delete Term.
+* @returns {Term}
+*/
+function remove(req, res, next) {
+  const term = req.term;
+  term.removeAsync()
+  .then(deletedTerm => {
+    res.json({
+      code: codes.TERM_DELETED,
+      status: 'success',
+      data: deletedTerm
+    });
+  })
+  .catch((e) => next(e));
+}
+
+/**
  * Get Term
  * @returns {Term}
  */
@@ -90,4 +134,4 @@ function search(req, res, next) {
   });
 }
 
-export default { load, get, recently, search };
+export default { load, get, recently, search, create, remove };

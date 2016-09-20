@@ -7,3 +7,7 @@ export const NO_TERM_WAS_FOUND = 14005;
 // Get recently tagged media
 export const RECENTLY_TAGGED_MEDIA = 15000;
 export const NO_RECENTLY_TAGGED_MEDIA = 15005;
+// create Terms
+export const TERM_CREATED = 16000;
+// delete Term
+export const TERM_DELETED = 17000;

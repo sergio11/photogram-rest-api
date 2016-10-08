@@ -111,7 +111,7 @@ router.get('/confirm/:token', validate(paramValidation.confirm), userCtrl.confir
 /**
 * @api {post} /api/v1/accounts/reset-password reset password request
 * @apiVersion 0.0.1
-* @apiName reset-password
+* @apiName resetPasswordRequest
 * @apiGroup Accounts
 * @apiParam {String} email a user email for verification.
 * @apiSuccess {String} message instructions to follow.
@@ -140,6 +140,39 @@ router.get('/confirm/:token', validate(paramValidation.confirm), userCtrl.confir
 *       "message": "The password for this user has already been requested within 24 hours"
 *     }
 */
-router.post('/reset-password', validate(paramValidation.reset), userCtrl.resetPassword);
+router.post(
+  '/reset-password',
+  validate(paramValidation.resetPasswordRequest),
+  userCtrl.resetPasswordRequest);
+
+/**
+* @api {post} /api/v1/accounts/reset-password/token reset password
+* @apiVersion 0.0.1
+* @apiName reset-password
+* @apiGroup Accounts
+* @apiParam {String} token a token from reset password request
+* @apiParam {String} password a new password for user account
+* @apiSuccess {String} message a confirmation message
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*     {
+*       "code": "1017",
+*       "status": "success",
+*       "data": 'Password successfully reset'
+*     }
+* @apiError INVALID_CONFIRMATION_TOKEN The token is not valid.
+* @apiErrorExample Error-Response:
+*     HTTP/1.1 400 Bad request
+*     {
+*       "code": "1006",
+*       "status": "error",
+*       "message": "Invalid confirmation token"
+*     }
+*/
+router.post(
+  '/reset-password/:token',
+  validate(paramValidation.resetPassword),
+  userCtrl.resetPassword);
+
 
 export default router;

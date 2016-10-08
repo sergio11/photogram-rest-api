@@ -373,9 +373,9 @@ export function confirm(req, res, next) {
 }
 
 /**
-* Reset User password
+* Send token for reset to user email
 */
-export function resetPassword(req, res, next) {
+export function resetPasswordRequest(req, res, next) {
   User.findOne({ email: req.body.email }).then(user =>	{
     if (!user) {
       throw new APIError(
@@ -412,4 +412,33 @@ export function resetPassword(req, res, next) {
       data: res.__('We have sent an email to %s', savedUser.email)
     });
   }).catch(e => next(e));
+}
+
+/*
+* Reset user password
+*/
+export function resetPassword(req, res, next) {
+  User.findOneAndUpdate({
+    confirmationToken: req.params.token
+  }, {
+    password: req.body.password,
+    passwordRequestedAt: null
+  })
+  .then(user => {
+    if (!user) {
+      throw new APIError(
+        codes.INVALID_CONFIRMATION_TOKEN,
+        res.__('Invalid confirmation token'),
+        httpStatus.BAD_REQUEST,
+        true
+      );
+    } else {
+      res.json({
+        code: codes.PASSWORD_SUCCESSFULLY_RESET,
+        status: 'success',
+        data: res.__('Password successfully reset')
+      });
+    }
+  })
+  .catch(e => next(e));
 }

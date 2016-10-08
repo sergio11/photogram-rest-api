@@ -5,7 +5,7 @@ import chai from 'chai';
 import { expect } from 'chai';
 import app from '../app';
 import * as codes from '../codes/';
-import { secret, fbToken, fbID, activateToken } from '../../config/env';
+import { secret, fbToken, fbID, activateToken, resetPasswordToken } from '../../config/env';
 import { sign } from 'jsonwebtoken';
 
 chai.config.includeStack = false;
@@ -289,6 +289,44 @@ describe('## User APIs', () => {
           expect(res.body.message)
             .to
             .equal('The password for this user has already been requested within 24 hours.');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+  });
+
+  describe('# POST /api/v1/accounts/reset-password/token', () => {
+    it('should not reset password', (done) => {
+      request(app)
+        .post('/api/v1/accounts/reset-password/1234567890sdfghj')
+        .send({
+          password: 'estoesunaprueba12345'
+        })
+        .expect(httpStatus.BAD_REQUEST)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.INVALID_CONFIRMATION_TOKEN);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('Invalid confirmation token');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should reset password', (done) => {
+      request(app)
+        .post(`/api/v1/accounts/reset-password/${resetPasswordToken}`)
+        .send({
+          password: 'estoesunaprueba12345'
+        })
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.PASSWORD_SUCCESSFULLY_RESET);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data).to.equal('Password successfully reset');
           done();
         })
         .catch(err => {

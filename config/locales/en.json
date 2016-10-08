@@ -27,5 +27,6 @@
 	"Term created": "Term created",
 	"The password for this user has already been requested within 24 hours": "The password for this user has already been requested within 24 hours.",
 	"We have sent an email to %s": "We have sent an email to %s. It contains an activation link for you to click to activate your account.",
-	"No such user exists": "No such user exists"
+	"No such user exists": "No such user exists",
+	"Password successfully reset": "Password successfully reset"
 }

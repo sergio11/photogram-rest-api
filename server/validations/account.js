@@ -34,9 +34,18 @@ export default {
     }
   },
   // POST /accounts/reset-password
-  reset: {
+  resetPasswordRequest: {
     body: {
       email: Joi.string().email().required()
+    }
+  },
+  // POST /accounts/reset-password/:token
+  resetPassword: {
+    params: {
+      token: Joi.string().required().length(16)
+    },
+    body: {
+      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/)
     }
   }
 };

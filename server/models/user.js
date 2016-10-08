@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
+import timestamps from 'mongoose-timestamp';
 import bcrypt from 'bcrypt';
 import randtoken from 'rand-token';
 import { env, activateToken } from '../../config/env';
@@ -41,10 +42,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
     match: [/^[1-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   },
   _media: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -219,6 +216,8 @@ UserSchema.statics = {
     ]).then(() => ({ follower, followed }));
   }
 };
+// Plugins
+UserSchema.plugin(timestamps);
 /**
  * @typedef User
  */

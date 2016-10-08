@@ -32,5 +32,11 @@ export default {
     params: {
       token: Joi.string().required().length(16)
     }
+  },
+  // POST /accounts/reset-password
+  reset: {
+    body: {
+      email: Joi.string().email().required()
+    }
   }
 };

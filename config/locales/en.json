@@ -24,5 +24,8 @@
 	"The account is disabled": "The account is disabled",
 	"The account was successfully activated": "The account was successfully activated",
 	"Invalid confirmation token": "Invalid confirmation token",
-	"Term created": "Term created"
+	"Term created": "Term created",
+	"The password for this user has already been requested within 24 hours": "The password for this user has already been requested within 24 hours.",
+	"We have sent an email to %s": "We have sent an email to %s. It contains an activation link for you to click to activate your account.",
+	"No such user exists": "No such user exists"
 }

@@ -6,8 +6,6 @@ import { env, activateToken } from '../../config/env';
 
 // promisify bcrypt
 Promise.promisifyAll(bcrypt);
-require('mongoose-type-url');
-require('mongoose-type-email');
 
 const SALT_WORK_FACTOR = 10;
 /**
@@ -28,7 +26,7 @@ const UserSchema = new mongoose.Schema({
     required: false
   },
   website: {
-    type: mongoose.SchemaTypes.Url,
+    type: String,
     required: false
   },
   biography: {
@@ -36,7 +34,7 @@ const UserSchema = new mongoose.Schema({
     required: false
   },
   email: {
-    type: mongoose.SchemaTypes.Email,
+    type: String,
     required: true
   },
   mobileNumber: {
@@ -81,6 +79,10 @@ const UserSchema = new mongoose.Schema({
     required: false,
     unique: true,
     sparse: true
+  },
+  passwordRequestedAt: {
+    type: Date,
+    required: false
   }
 });
 

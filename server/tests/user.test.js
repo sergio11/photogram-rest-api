@@ -220,6 +220,83 @@ describe('## User APIs', () => {
     });
   });
 
+  describe('# POST /api/v1/accounts/reset-password', () => {
+    it('should not reset password - email is required', (done) => {
+      request(app)
+        .post('/api/v1/accounts/reset-password')
+        .expect(httpStatus.BAD_REQUEST)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.VALIDATION_ERROR);
+          expect(res.body.message)
+            .to
+            .equal('"email" is required');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should not reset password - no such user exist', (done) => {
+      request(app)
+        .post('/api/v1/accounts/reset-password')
+        .send({
+          email: 'emailfalso@usal.es'
+        })
+        .expect(httpStatus.NOT_FOUND)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.NO_SUCH_USER_EXIST);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message).to.equal('No such user exists');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should reset password', (done) => {
+      request(app)
+        .post('/api/v1/accounts/reset-password')
+        .send({
+          email: user.email
+        })
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.PASSWORD_RESET_REQUEST_MADE);
+          expect(res.body.status).to.equal('success');
+          expect(res.body.data)
+            .to
+            .equal('We have sent an email to sss4esob@gmail.com. '
+              + 'It contains an activation link for you to click to activate your account.');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+
+    it('should not reset password - The last request not expired yet', (done) => {
+      request(app)
+        .post('/api/v1/accounts/reset-password')
+        .send({
+          email: user.email
+        })
+        .expect(httpStatus.BAD_REQUEST)
+        .then(res => {
+          expect(res.body.code).to.equal(codes.PASSWORD_ALREDY_REQUEST);
+          expect(res.body.status).to.equal('error');
+          expect(res.body.message)
+            .to
+            .equal('The password for this user has already been requested within 24 hours.');
+          done();
+        })
+        .catch(err => {
+          console.error('ERROR : ', err.response.text);
+        });
+    });
+  });
+
   describe('# GET /api/v1/users/self', () => {
     it('should get self details', (done) => {
       request(app)

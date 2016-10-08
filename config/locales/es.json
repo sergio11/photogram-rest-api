@@ -22,5 +22,8 @@
   "The account is disabled": "La cuenta está deshabilitada",
   "The account was successfully activated": "La cuenta fue activada con éxito",
   "Invalid confirmation token": "Token de confirmación no válido",
-  "Term created": "Término creado"
+  "Term created": "Término creado",
+  "The password for this user has already been requested within 24 hours": "La contraseña para este usuario ya ha sido solicitada dentro de las 24 horas.",
+  "We have sent an email to %s. It contains an activation link for you to click to activate your account.": "Se ha enviado un email a %s. Contiene un enlace de activación que debes presionar para activar tu cuenta.",
+  "No such user exists": "No existe el usuario"
 }

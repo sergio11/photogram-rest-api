@@ -13,7 +13,7 @@ const MediaSchema = new mongoose.Schema({
     required: false
   },
   link: {
-    type: mongoose.SchemaTypes.Url,
+    type: String,
     required: true
   },
   createdAt: {

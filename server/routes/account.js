@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from 'express-validation';
 import paramValidation from '../validations/account';
-import userCtrl from '../controllers/user';
+import * as userCtrl from '../controllers/user';
 
 const router = express.Router();	// eslint-disable-line new-cap
 
@@ -108,5 +108,38 @@ router.post('/signup', validate(paramValidation.signup), userCtrl.create);
 *     }
 */
 router.get('/confirm/:token', validate(paramValidation.confirm), userCtrl.confirm);
+/**
+* @api {post} /api/v1/accounts/reset-password reset password request
+* @apiVersion 0.0.1
+* @apiName reset-password
+* @apiGroup Accounts
+* @apiParam {String} email a user email for verification.
+* @apiSuccess {String} message instructions to follow.
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*     {
+*       "code": "1015",
+*       "status": "success",
+*       "data": 'We have sent an email to %s.
+*        It contains an activation link for you to click to activate your account.'
+*     }
+* @apiError NO_SUCH_USER_EXIST The user for which the password reset is requested does not exist.
+* @apiErrorExample Error-Response:
+*     HTTP/1.1 404 Not Found
+*     {
+*       "code": "1016",
+*       "status": "error",
+*       "message": "No such user exists"
+*     }
+* @apiError PASSWORD_ALREDY_REQUEST The last request not expired yet.
+* @apiErrorExample Error-Response:
+*     HTTP/1.1 400 Bad Request
+*     {
+*       "code": "1014",
+*       "status": "error",
+*       "message": "The password for this user has already been requested within 24 hours"
+*     }
+*/
+router.post('/reset-password', validate(paramValidation.reset), userCtrl.resetPassword);
 
 export default router;

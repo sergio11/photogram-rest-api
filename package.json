@@ -56,7 +56,7 @@
     "jsonwebtoken": "^5.7.0",
     "lodash": "^4.0.1",
     "method-override": "^2.3.5",
-    "mongoose": "^4.3.7",
+    "mongoose": "^5.7.7",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "1.7.0",
     "pm2": "^1.1.3",

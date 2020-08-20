@@ -35,7 +35,7 @@
     "boilerplate"
   ],
   "dependencies": {
-    "bcrypt": "^0.8.7",
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.1.4",
     "body-parser": "^1.14.2",
     "compression": "^1.6.1",
